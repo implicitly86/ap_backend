@@ -1,0 +1,79 @@
+buildscript {
+    ext {
+        springBootVersion = '1.5.14.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+group 'com.implicitly'
+version '0.0.1'
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    /* spring modules */
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.5.14.RELEASE', {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+    }
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-undertow', version: '1.5.14.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '1.5.14.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-actuator-docs', version: '1.5.14.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '1.5.14.RELEASE'
+
+    /* persistence */
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '1.5.14.RELEASE'
+    compile group: 'org.postgresql', name: 'postgresql', version: '9.4.1212'
+    compile group: 'com.zaxxer', name: 'HikariCP', version: '2.7.1'
+    compile group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.1-api', version: '1.0.2.Final'
+    compile group: 'org.hibernate', name: 'hibernate-java8', version: '5.3.2.Final'
+
+    /* dev tools */
+    compile group: 'org.springframework.boot', name: 'spring-boot-devtools', version: '1.5.14.RELEASE'
+
+    /* REST API documentation modules */
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.7.0'
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.7.0'
+
+    /* Utility modules */
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.16.18'
+    compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.0'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.2.1'
+    compile group: 'commons-collections', name: 'commons-collections'
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
+    compile group: 'ch.qos.logback', name: 'logback-core', version: '1.2.3'
+    compile group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '5.1'
+
+    /* test */
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.5.14.RELEASE'
+    testCompile group: 'org.testng', name: 'testng', version: '6.11'
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.11.0'
+}
+
+configurations {
+    compile.exclude module: "spring-boot-starter-tomcat"
+}
+
+bootRepackage {
+    mainClass = 'com.implicitly.Bootstrap'
+}
+
+springBoot {
+    executable = true
+}
