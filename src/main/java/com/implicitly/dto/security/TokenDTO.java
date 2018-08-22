@@ -2,7 +2,7 @@
  * ©  Implicitly86 All Rights Reserved
  */
 
-package com.implicitly.dto;
+package com.implicitly.dto.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;

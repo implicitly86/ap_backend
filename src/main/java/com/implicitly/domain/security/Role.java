@@ -2,8 +2,9 @@
  * ©  Implicitly86 All Rights Reserved
  */
 
-package com.implicitly.domain;
+package com.implicitly.domain.security;
 
+import com.implicitly.domain.IdentifiedEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,7 +21,7 @@ import lombok.EqualsAndHashCode;
  * @author Emil Murzakaev.
  */
 @Data
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode
 @Entity
 @Table(name = "role")
 public class Role implements IdentifiedEntity {

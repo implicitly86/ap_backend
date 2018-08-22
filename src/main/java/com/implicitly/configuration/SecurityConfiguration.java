@@ -62,11 +62,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
      * @param userDetailsService {@link CustomUserDetailsService}.
      */
     @Autowired
-    public SecurityConfiguration(CustomUserDetailsService userDetailsService, JwtAuthenticationEntryPoint unauthorizedHandler) {
+    public SecurityConfiguration(CustomUserDetailsService userDetailsService,
+            JwtAuthenticationEntryPoint unauthorizedHandler) {
         this.userDetailsService = userDetailsService;
         this.unauthorizedHandler = unauthorizedHandler;
     }
 
+    /**
+     * {@link PostConstruct}
+     */
     @PostConstruct
     public void init() {
         if (log.isInfoEnabled()) {

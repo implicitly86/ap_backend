@@ -2,13 +2,14 @@
  * ©  Implicitly86 All Rights Reserved
  */
 
-package com.implicitly.persistence;
+package com.implicitly.persistence.security;
 
-import com.implicitly.domain.User;
+import com.implicitly.domain.security.User;
+import com.implicitly.persistence.BaseRepository;
 import org.springframework.stereotype.Component;
 
 /**
- * Маппер для сущности {@link User} - пользователь.
+ * Репозиторий сущности {@link User}.
  *
  * @author Emil Murzakaev.
  */

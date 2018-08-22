@@ -4,20 +4,24 @@
 
 package com.implicitly.configuration;
 
+import com.implicitly.constants.Constants;
 import com.zaxxer.hikari.HikariDataSource;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.data.web.SortHandlerMethodArgumentResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * Конфигурация подключения к БД.
@@ -26,9 +30,11 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
  */
 @Slf4j
 @Configuration
-@EntityScan(basePackages = {"com.implicitly.domain"})
-@EnableJpaRepositories(basePackages = {"com.implicitly.persistence"})
-@EnableConfigurationProperties({DataSourceProperties.class, JpaProperties.class})
+@EntityScan(basePackages = {Constants.ENTITY_BASE_PACKAGE})
+@EnableJpaRepositories(basePackages = {Constants.REPOSITORY_BASE_PACKAGE})
+@EnableTransactionManagement
+@EnableConfigurationProperties({DataSourceProperties.class, JpaProperties.class, RedisProperties.class})
+@EnableAspectJAutoProxy(proxyTargetClass = true)
 public class JpaConfiguration {
 
     /**
@@ -47,29 +53,45 @@ public class JpaConfiguration {
     private final JpaProperties jpaProperties;
 
     /**
+     * {@link RedisProperties}
+     */
+    private final RedisProperties redisProperties;
+
+    /**
      * Конструктор.
      *
      * @param dsProperties {@link DataSourceProperties}
      * @param jpaProperties {@link JpaProperties}
      */
     @Autowired
-    public JpaConfiguration(DataSourceProperties dsProperties, JpaProperties jpaProperties) {
+    public JpaConfiguration(
+            DataSourceProperties dsProperties, JpaProperties jpaProperties, RedisProperties redisProperties) {
         this.dataSourceProperties = dsProperties;
         this.jpaProperties = jpaProperties;
+        this.redisProperties = redisProperties;
     }
 
+    /**
+     * {@link PostConstruct}
+     */
     @PostConstruct
     public void init() {
         if (log.isInfoEnabled()) {
             log.info(
-                    "{} has been initialized.",
+                    "{} has been initialized",
                     LOG_TAG
             );
             log.info(
-                    "{} URL - {}, User - {}",
+                    "{} database url : {}, database user : {}",
                     LOG_TAG,
                     dataSourceProperties.getUrl(),
                     dataSourceProperties.getUsername()
+            );
+            log.info(
+                    "{} redis hostname : {}, port : {}",
+                    LOG_TAG,
+                    redisProperties.getHost(),
+                    redisProperties.getPort()
             );
         }
     }

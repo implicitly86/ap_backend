@@ -4,8 +4,8 @@
 
 package com.implicitly.service.impl;
 
-import com.implicitly.domain.User;
-import com.implicitly.persistence.UserRepository;
+import com.implicitly.domain.security.User;
+import com.implicitly.persistence.security.UserRepository;
 import com.implicitly.security.UserPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -36,32 +36,44 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     /**
-     * Поиск пользователя по имени.
+     * Поиск {@link UserDetails} по имени.
      *
      * @param username имя пользователя.
+     * @return {@link UserDetails}
      */
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByName(username);
         if (user == null) {
-            throw new UsernameNotFoundException("User not found with username or email : " + username);
+            throw new UsernameNotFoundException("UserDTO not found with username or email : " + username);
         }
         return UserPrincipal.create(user);
     }
 
     /**
-     * Поиск пользователя по уникальному идентификатору.
+     * Поиск {@link UserDetails} по уникальному идентификатору.
      *
-      @param id уникальный идентификатор пользователя.
+     * @param id уникальный идентификатор пользователя.
+     * @return {@link UserDetails}
      */
     @Transactional
     public UserDetails loadUserById(Long id) {
         User user = userRepository.findOne(id);
         if (user == null) {
-            throw new UsernameNotFoundException("User not found with id : " + id);
+            throw new UsernameNotFoundException("UserDTO not found with id : " + id);
         }
         return UserPrincipal.create(user);
+    }
+
+    /**
+     * Поиск {@link User} по уникальному идентификатору.
+     *
+     * @param id уникальный идентификатор пользователя.
+     * @return {@link User}
+     */
+    public User loadUser(Long id) {
+        return userRepository.findOne(id);
     }
 
 }

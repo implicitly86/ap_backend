@@ -4,8 +4,8 @@
 
 package com.implicitly.security;
 
-import com.implicitly.domain.Role;
-import com.implicitly.domain.User;
+import com.implicitly.domain.security.Role;
+import com.implicitly.domain.security.User;
 import com.implicitly.utils.gson.GsonIgnore;
 import java.util.Collection;
 import java.util.List;
@@ -114,6 +114,20 @@ public class UserPrincipal implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    /**
+     * Получение {@link User} из объекта {@link UserPrincipal}.
+     *
+     * @return {@link User}
+     */
+    public User getUser() {
+        return User.builder()
+                .id(id)
+                .name(name)
+                .password(password)
+                .roles(roles)
+                .build();
     }
 
 }

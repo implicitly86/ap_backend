@@ -2,7 +2,7 @@
  * ©  Implicitly86 All Rights Reserved
  */
 
-package com.implicitly.dto;
+package com.implicitly.dto.security;
 
 import lombok.Builder;
 import lombok.Getter;

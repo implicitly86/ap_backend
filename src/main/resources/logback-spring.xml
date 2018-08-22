@@ -73,9 +73,11 @@
 
     <logger name="springfox.documentation.spring.web.readers.operation.CachingOperationNameGenerator" level="error"/>
 
+    <!--
     <logger name="org.hibernate.SQL" level="DEBUG">
         <appender-ref ref="FILE-SQL"/>
     </logger>
+    -->
 
     <root level="INFO">
         <appender-ref ref="STASH"/>

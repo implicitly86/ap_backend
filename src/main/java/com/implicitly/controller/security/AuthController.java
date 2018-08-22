@@ -2,13 +2,13 @@
  * ©  Implicitly86 All Rights Reserved
  */
 
-package com.implicitly.controller;
+package com.implicitly.controller.security;
 
 import static org.springframework.http.ResponseEntity.ok;
 
-import com.implicitly.dto.CredentialsDTO;
-import com.implicitly.dto.TokenDTO;
-import com.implicitly.persistence.UserRepository;
+import com.implicitly.dto.security.CredentialsDTO;
+import com.implicitly.dto.security.TokenDTO;
+import com.implicitly.persistence.security.UserRepository;
 import com.implicitly.security.JwtTokenProvider;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

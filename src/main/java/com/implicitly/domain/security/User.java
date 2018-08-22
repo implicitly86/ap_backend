@@ -2,12 +2,14 @@
  * ©  Implicitly86 All Rights Reserved
  */
 
-package com.implicitly.domain;
+package com.implicitly.domain.security;
 
+import com.implicitly.domain.IdentifiedEntity;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,8 +18,11 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -27,9 +32,12 @@ import org.hibernate.annotations.FetchMode;
  * @author Emil Murzakaev.
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode
 @Entity
-@Table(name = "user", schema = "public")
+@Table(name = "`user`")
 public class User implements IdentifiedEntity {
 
     /**
@@ -69,7 +77,8 @@ public class User implements IdentifiedEntity {
      * Набор ролей пользователя.
      */
     @ManyToMany(
-            cascade = { CascadeType.ALL }
+            cascade = {CascadeType.ALL},
+            fetch = FetchType.EAGER
     )
     @Fetch(FetchMode.SUBSELECT)
     @JoinTable(
