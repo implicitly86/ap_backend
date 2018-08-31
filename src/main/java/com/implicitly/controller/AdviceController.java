@@ -7,6 +7,7 @@ package com.implicitly.controller;
 import static com.implicitly.constants.Constants.BODY;
 import static com.implicitly.constants.Constants.MESSAGE;
 
+import com.implicitly.exceptions.NotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +39,16 @@ public class AdviceController {
     @ResponseBody
     public Map<String, String> handleException(Exception ex) {
         return process(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * Обработка исключения {@link NotFoundException}
+     *
+     * @param ex {@link NotFoundException}
+     */
+    @ExceptionHandler(value = NotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public void handleNotFoundException(NotFoundException ex) {
     }
 
     /**

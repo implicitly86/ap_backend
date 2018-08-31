@@ -5,7 +5,8 @@
 package com.implicitly.service;
 
 import com.implicitly.dto.order.OrderDTO;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * Сервис работы с сущностью {@link OrderDTO}
@@ -17,9 +18,10 @@ public interface OrderService {
     /**
      * Получение всех сущностей {@link OrderDTO}.
      *
+     * @param pageable {@link Pageable}
      * @return список {@link OrderDTO}
      */
-    List<OrderDTO> getAllOrders();
+    Page<OrderDTO> getAllOrders(Pageable pageable);
 
     /**
      * Получение {@link OrderDTO} по уникальному идентификатору.

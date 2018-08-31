@@ -14,12 +14,14 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.data.web.SortHandlerMethodArgumentResolver;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -32,6 +34,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EntityScan(basePackages = {Constants.ENTITY_BASE_PACKAGE})
 @EnableJpaRepositories(basePackages = {Constants.REPOSITORY_BASE_PACKAGE})
+@EnableCaching
+@EnableSpringDataWebSupport
 @EnableTransactionManagement
 @EnableConfigurationProperties({DataSourceProperties.class, JpaProperties.class, RedisProperties.class})
 @EnableAspectJAutoProxy(proxyTargetClass = true)

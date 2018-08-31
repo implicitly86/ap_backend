@@ -4,20 +4,24 @@
 
 package com.implicitly.service.impl;
 
+import com.implicitly.constants.Constants;
 import com.implicitly.domain.customer.Customer;
 import com.implicitly.dto.customer.CustomerDTO;
+import com.implicitly.dto.order.OrderDTO;
+import com.implicitly.exceptions.NotFoundException;
 import com.implicitly.persistence.customer.CustomerRepository;
+import com.implicitly.persistence.order.OrderRepository;
 import com.implicitly.service.CustomerService;
 import com.implicitly.utils.UserUtils;
 import com.implicitly.utils.mapper.customer.CustomerMapper;
+import com.implicitly.utils.mapper.order.OrderMapper;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 /**
  * Реализация сервиса работы с сущностью {@link CustomerDTO}
@@ -34,34 +38,47 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository repository;
 
     /**
+     * {@link OrderRepository}
+     */
+    private final OrderRepository orderRepository;
+
+    /**
      * {@link CustomerMapper}
      */
     private final CustomerMapper mapper;
+
+    /**
+     * {@link OrderMapper}
+     */
+    private final OrderMapper orderMapper;
 
     /**
      * Конструктор.
      *
      * @param repository {@link CustomerRepository}.
      * @param mapper {@link CustomerMapper}.
+     * @param orderRepository {@link OrderRepository}.
+     * @param orderMapper {@link OrderMapper}.
      */
     @Autowired
-    public CustomerServiceImpl(CustomerRepository repository, CustomerMapper mapper) {
+    public CustomerServiceImpl(CustomerRepository repository, CustomerMapper mapper,
+            OrderRepository orderRepository, OrderMapper orderMapper) {
         this.repository = repository;
         this.mapper = mapper;
+        this.orderRepository = orderRepository;
+        this.orderMapper = orderMapper;
     }
 
     /**
      * Получение всех сущностей {@link CustomerDTO}.
      *
+     * @param pageable {@link Pageable}
      * @return список {@link CustomerDTO}
      */
     @Override
-    public List<CustomerDTO> getAllCustomers() {
-        List<Customer> result = repository.findAll();
-        if (CollectionUtils.isEmpty(result)) {
-            return Collections.emptyList();
-        }
-        return result.stream().map(mapper::toDto).collect(Collectors.toList());
+    @Cacheable(value = Constants.CACHE_CUSTOMERS)
+    public Page<CustomerDTO> getAllCustomers(Pageable pageable) {
+        return repository.findAll(pageable).map(mapper::toDto);
     }
 
     /**
@@ -74,7 +91,7 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerDTO getCustomer(Long id) {
         Customer customer = repository.findOne(id);
         if (customer == null) {
-            return null;
+            throw new NotFoundException();
         }
         return mapper.toDto(customer);
     }
@@ -101,10 +118,11 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public void updateCustomer(Long id, CustomerDTO customer) {
-        if (repository.exists(id)) {
-            Customer entity = mapper.toEntity(customer);
-            repository.save(entity);
+        if (!repository.exists(id)) {
+            throw new NotFoundException();
         }
+        Customer entity = mapper.toEntity(customer);
+        repository.save(entity);
     }
 
     /**
@@ -114,9 +132,26 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public void deleteCustomer(Long id) {
-        if (repository.exists(id)) {
-            repository.delete(id);
+        if (!repository.exists(id)) {
+            throw new NotFoundException();
         }
+        repository.delete(id);
+    }
+
+    /**
+     * Получение списка {@link OrderDTO} по идентификатору автора, разбитых по {@link Page}.
+     *
+     * @param id уникальный идентификатор {@link CustomerDTO}.
+     * @param pageable {@link Pageable}.
+     * @return {@link Page<OrderDTO>}.
+     */
+    @Override
+    public Page<OrderDTO> getOrders(Long id, Pageable pageable) {
+        Customer customer = repository.findOne(id);
+        if (customer == null) {
+            throw new NotFoundException();
+        }
+        return orderRepository.findAllByCustomer(customer, pageable).map(orderMapper::toDto);
     }
 
 }

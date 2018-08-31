@@ -5,13 +5,13 @@
 package com.implicitly.controller.deliverypoint;
 
 import static org.springframework.http.ResponseEntity.noContent;
-import static org.springframework.http.ResponseEntity.notFound;
 import static org.springframework.http.ResponseEntity.ok;
 
 import com.implicitly.dto.deliverypoint.DeliveryPointDTO;
 import com.implicitly.service.DeliveryPointService;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -48,11 +48,12 @@ public class DeliveryPointController {
     /**
      * Получение всех сущностей {@link DeliveryPointDTO}.
      *
+     * @param pageable {@link Pageable}
      * @return список {@link DeliveryPointDTO}
      */
     @GetMapping(value = "/delivery-point", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<List<DeliveryPointDTO>> getAllDeliveryPoints() {
-        return ok(deliveryPointService.getAllDeliveryPoints());
+    public ResponseEntity<Page<DeliveryPointDTO>> getAllDeliveryPoints(Pageable pageable) {
+        return ok(deliveryPointService.getAllDeliveryPoints(pageable));
     }
 
     /**
@@ -63,11 +64,7 @@ public class DeliveryPointController {
      */
     @GetMapping(value = "/delivery-point/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<DeliveryPointDTO> getDeliveryPoint(@PathVariable("id") Long id) {
-        DeliveryPointDTO deliveryPoint = deliveryPointService.getDeliveryPoint(id);
-        if (deliveryPoint == null) {
-            return notFound().build();
-        }
-        return ok(deliveryPoint);
+        return ok(deliveryPointService.getDeliveryPoint(id));
     }
 
     /**

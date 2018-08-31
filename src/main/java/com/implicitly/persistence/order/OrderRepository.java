@@ -4,8 +4,11 @@
 
 package com.implicitly.persistence.order;
 
+import com.implicitly.domain.customer.Customer;
 import com.implicitly.domain.order.Order;
 import com.implicitly.persistence.BaseRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,5 +18,14 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public interface OrderRepository extends BaseRepository<Order, Long> {
+
+    /**
+     * Получение {@link Order}, принадлежащих {@link Customer}.
+     *
+     * @param customer {@link Customer}.
+     * @param pageable {@link Pageable}.
+     * @return {@link Page<Order>}.
+     */
+    Page<Order> findAllByCustomer(Customer customer, Pageable pageable);
 
 }

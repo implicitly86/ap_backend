@@ -5,13 +5,13 @@
 package com.implicitly.controller.order;
 
 import static org.springframework.http.ResponseEntity.noContent;
-import static org.springframework.http.ResponseEntity.notFound;
 import static org.springframework.http.ResponseEntity.ok;
 
 import com.implicitly.dto.order.OrderDTO;
 import com.implicitly.service.OrderService;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -48,11 +48,12 @@ public class OrderController {
     /**
      * Получение всех сущностей {@link com.implicitly.dto.order.OrderDTO}.
      *
+     * @param pageable {@link Pageable}
      * @return список {@link com.implicitly.dto.order.OrderDTO}
      */
     @GetMapping(value = "/order", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<List<OrderDTO>> getAllOrders() {
-        return ok(orderService.getAllOrders());
+    public ResponseEntity<Page<OrderDTO>> getAllOrders(Pageable pageable) {
+        return ok(orderService.getAllOrders(pageable));
     }
 
     /**
@@ -63,11 +64,7 @@ public class OrderController {
      */
     @GetMapping(value = "/order/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<OrderDTO> getOrder(@PathVariable("id") Long id) {
-        OrderDTO order = orderService.getOrder(id);
-        if (order == null) {
-            return notFound().build();
-        }
-        return ok(order);
+        return ok(orderService.getOrder(id));
     }
 
     /**

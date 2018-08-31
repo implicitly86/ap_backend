@@ -5,14 +5,15 @@
 package com.implicitly.controller.customer;
 
 import static org.springframework.http.ResponseEntity.noContent;
-import static org.springframework.http.ResponseEntity.notFound;
 import static org.springframework.http.ResponseEntity.ok;
 
 import com.implicitly.dto.customer.CustomerDTO;
+import com.implicitly.dto.order.OrderDTO;
 import com.implicitly.service.CustomerService;
 import com.implicitly.service.DeliveryPointService;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -52,8 +53,8 @@ public class CustomerController {
      * @return список {@link CustomerDTO}
      */
     @GetMapping(value = "/customer", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<List<CustomerDTO>> getAllCustomers() {
-        return ok(customerService.getAllCustomers());
+    public ResponseEntity<Page<CustomerDTO>> getAllCustomers(Pageable pageable) {
+        return ok(customerService.getAllCustomers(pageable));
     }
 
     /**
@@ -64,11 +65,7 @@ public class CustomerController {
      */
     @GetMapping(value = "/customer/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<CustomerDTO> getCustomer(@PathVariable("id") Long id) {
-        CustomerDTO customer = customerService.getCustomer(id);
-        if (customer == null) {
-            return notFound().build();
-        }
-        return ok(customer);
+        return ok(customerService.getCustomer(id));
     }
 
     /**
@@ -103,6 +100,18 @@ public class CustomerController {
     public ResponseEntity<Void> deleteCustomer(@PathVariable("id") Long id) {
         customerService.deleteCustomer(id);
         return noContent().build();
+    }
+
+    /**
+     * Получение списка {@link OrderDTO} по идентификатору автора, разбитых по {@link Page}.
+     *
+     * @param id уникальный идентификатор {@link CustomerDTO}.
+     * @param pageable {@link Pageable}.
+     * @return {@link Page<OrderDTO>}.
+     */
+    @GetMapping(value = "/customer/{id}/orders", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Page<OrderDTO>> getOrders(@PathVariable("id") Long id, Pageable pageable) {
+        return ok(customerService.getOrders(id, pageable));
     }
 
 }

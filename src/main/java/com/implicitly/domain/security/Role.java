@@ -23,7 +23,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode
 @Entity
-@Table(name = "role")
+@Table(name = "`role`")
 public class Role implements IdentifiedEntity {
 
     /**

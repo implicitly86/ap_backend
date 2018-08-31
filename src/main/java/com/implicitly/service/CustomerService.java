@@ -5,7 +5,9 @@
 package com.implicitly.service;
 
 import com.implicitly.dto.customer.CustomerDTO;
-import java.util.List;
+import com.implicitly.dto.order.OrderDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * Сервис работы с сущностью {@link CustomerDTO}
@@ -17,9 +19,10 @@ public interface CustomerService {
     /**
      * Получение всех сущностей {@link CustomerDTO}.
      *
+     * @param pageable {@link Pageable}
      * @return список {@link CustomerDTO}
      */
-    List<CustomerDTO> getAllCustomers();
+    Page<CustomerDTO> getAllCustomers(Pageable pageable);
 
     /**
      * Получение {@link CustomerDTO} по уникальному идентификатору.
@@ -50,5 +53,14 @@ public interface CustomerService {
      * @param id уникальный идентификатор.
      */
     void deleteCustomer(Long id);
+
+    /**
+     * Получение списка {@link OrderDTO}, разбитых по {@link Page}.
+     *
+     * @param id уникальный идентификатор {@link CustomerDTO}.
+     * @param pageable {@link Pageable}.
+     * @return {@link Page<OrderDTO>}.
+     */
+    Page<OrderDTO> getOrders(Long id, Pageable pageable);
 
 }

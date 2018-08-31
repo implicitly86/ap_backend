@@ -4,9 +4,11 @@
 
 package com.implicitly.service.impl;
 
+import com.implicitly.constants.Constants;
 import com.implicitly.domain.security.User;
 import com.implicitly.persistence.security.UserRepository;
 import com.implicitly.security.UserPrincipal;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -42,6 +44,7 @@ public class CustomUserDetailsService implements UserDetailsService {
      * @return {@link UserDetails}
      */
     @Override
+    @Cacheable(value = Constants.CACHE_USER_BY_NAME, key = "#username")
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByName(username);
@@ -57,6 +60,7 @@ public class CustomUserDetailsService implements UserDetailsService {
      * @param id уникальный идентификатор пользователя.
      * @return {@link UserDetails}
      */
+    @Cacheable(value = Constants.CACHE_USER_BY_ID, key = "#id")
     @Transactional
     public UserDetails loadUserById(Long id) {
         User user = userRepository.findOne(id);
@@ -64,16 +68,6 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("UserDTO not found with id : " + id);
         }
         return UserPrincipal.create(user);
-    }
-
-    /**
-     * Поиск {@link User} по уникальному идентификатору.
-     *
-     * @param id уникальный идентификатор пользователя.
-     * @return {@link User}
-     */
-    public User loadUser(Long id) {
-        return userRepository.findOne(id);
     }
 
 }

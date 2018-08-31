@@ -20,6 +20,8 @@ spring:
   redis:
     host: ${REDIS_HOST}
     port: ${REDIS_PORT}
+  cache:
+    type: redis
   jackson:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false

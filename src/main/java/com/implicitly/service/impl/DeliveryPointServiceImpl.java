@@ -4,17 +4,18 @@
 
 package com.implicitly.service.impl;
 
+import com.implicitly.constants.Constants;
 import com.implicitly.domain.deliverypoint.DeliveryPoint;
 import com.implicitly.dto.deliverypoint.DeliveryPointDTO;
+import com.implicitly.exceptions.NotFoundException;
 import com.implicitly.persistence.deliverypoint.DeliveryPointRepository;
 import com.implicitly.service.DeliveryPointService;
 import com.implicitly.utils.mapper.deliverypoint.DeliveryPointMapper;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 /**
  * Реализация сервиса работы с сущностью {@link DeliveryPointDTO}
@@ -49,15 +50,13 @@ public class DeliveryPointServiceImpl implements DeliveryPointService {
     /**
      * Получение всех сущностей {@link DeliveryPointDTO}.
      *
+     * @param pageable {@link Pageable}
      * @return список {@link DeliveryPointDTO}
      */
     @Override
-    public List<DeliveryPointDTO> getAllDeliveryPoints() {
-        List<DeliveryPoint> result = repository.findAll();
-        if (CollectionUtils.isEmpty(result)) {
-            return Collections.emptyList();
-        }
-        return result.stream().map(mapper::toDto).collect(Collectors.toList());
+    @Cacheable(value = Constants.CACHE_DELIVERY_POINTS)
+    public Page<DeliveryPointDTO> getAllDeliveryPoints(Pageable pageable) {
+        return repository.findAll(pageable).map(mapper::toDto);
     }
 
     /**
@@ -70,7 +69,7 @@ public class DeliveryPointServiceImpl implements DeliveryPointService {
     public DeliveryPointDTO getDeliveryPoint(Long id) {
         DeliveryPoint deliveryPoint = repository.findOne(id);
         if (deliveryPoint == null) {
-            return null;
+            throw new NotFoundException();
         }
         return mapper.toDto(deliveryPoint);
     }
@@ -94,10 +93,11 @@ public class DeliveryPointServiceImpl implements DeliveryPointService {
      */
     @Override
     public void updateDeliveryPoint(Long id, DeliveryPointDTO deliveryPoint) {
-        if (repository.exists(id)) {
-            DeliveryPoint entity = mapper.toEntity(deliveryPoint);
-            repository.save(entity);
+        if (!repository.exists(id)) {
+            throw new NotFoundException();
         }
+        DeliveryPoint entity = mapper.toEntity(deliveryPoint);
+        repository.save(entity);
     }
 
     /**
@@ -107,9 +107,10 @@ public class DeliveryPointServiceImpl implements DeliveryPointService {
      */
     @Override
     public void deleteDeliveryPoint(Long id) {
-        if (repository.exists(id)) {
-            repository.delete(id);
+        if (!repository.exists(id)) {
+            throw new NotFoundException();
         }
+        repository.delete(id);
     }
 
 }

@@ -4,20 +4,21 @@
 
 package com.implicitly.service.impl;
 
+import com.implicitly.constants.Constants;
 import com.implicitly.domain.order.Order;
 import com.implicitly.dto.customer.CustomerDTO;
 import com.implicitly.dto.order.OrderDTO;
+import com.implicitly.exceptions.NotFoundException;
 import com.implicitly.persistence.order.OrderRepository;
 import com.implicitly.service.OrderService;
 import com.implicitly.utils.UserUtils;
 import com.implicitly.utils.mapper.order.OrderMapper;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 /**
  * Реализация сервиса работы с сущностью {@link OrderDTO}
@@ -52,15 +53,13 @@ public class OrderServiceImpl implements OrderService {
     /**
      * Получение всех сущностей {@link OrderDTO}.
      *
+     * @param pageable {@link Pageable}
      * @return список {@link OrderDTO}
      */
     @Override
-    public List<OrderDTO> getAllOrders() {
-        List<Order> result = repository.findAll();
-        if (CollectionUtils.isEmpty(result)) {
-            return Collections.emptyList();
-        }
-        return result.stream().map(mapper::toDto).collect(Collectors.toList());
+    @Cacheable(value = Constants.CACHE_ORDERS)
+    public Page<OrderDTO> getAllOrders(Pageable pageable) {
+        return repository.findAll(pageable).map(mapper::toDto);
     }
 
     /**
@@ -73,7 +72,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderDTO getOrder(Long id) {
         Order order = repository.findOne(id);
         if (order == null) {
-            return null;
+            throw new NotFoundException();
         }
         return mapper.toDto(order);
     }
@@ -104,12 +103,13 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public void updateOrder(Long id, OrderDTO order) {
-        if (repository.exists(id)) {
-            Order entity = mapper.toEntity(order);
-            entity.setModifiedDate(LocalDateTime.now());
-            UserUtils.getCurrentUser().ifPresent(entity::setModifiedBy);
-            repository.save(entity);
+        if (!repository.exists(id)) {
+            throw new NotFoundException();
         }
+        Order entity = mapper.toEntity(order);
+        entity.setModifiedDate(LocalDateTime.now());
+        UserUtils.getCurrentUser().ifPresent(entity::setModifiedBy);
+        repository.save(entity);
     }
 
     /**
@@ -119,9 +119,10 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public void deleteOrder(Long id) {
-        if (repository.exists(id)) {
-            repository.delete(id);
+        if (!repository.exists(id)) {
+            throw new NotFoundException();
         }
+        repository.delete(id);
     }
 
 }

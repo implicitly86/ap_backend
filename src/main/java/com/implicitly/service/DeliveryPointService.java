@@ -5,7 +5,8 @@
 package com.implicitly.service;
 
 import com.implicitly.dto.deliverypoint.DeliveryPointDTO;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * Сервис работы с сущностью {@link DeliveryPointDTO}
@@ -17,9 +18,10 @@ public interface DeliveryPointService {
     /**
      * Получение всех сущностей {@link DeliveryPointDTO}.
      *
+     * @param pageable {@link Pageable}
      * @return список {@link DeliveryPointDTO}
      */
-    List<DeliveryPointDTO> getAllDeliveryPoints();
+    Page<DeliveryPointDTO> getAllDeliveryPoints(Pageable pageable);
 
     /**
      * Получение {@link DeliveryPointDTO} по уникальному идентификатору.
