@@ -18,6 +18,7 @@ import com.implicitly.utils.mapper.order.OrderMapper;
 import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -102,6 +103,7 @@ public class CustomerServiceImpl implements CustomerService {
      * @param customer {@link CustomerDTO}.
      */
     @Override
+    @CacheEvict(value = Constants.CACHE_CUSTOMERS, allEntries = true)
     public CustomerDTO saveCustomer(CustomerDTO customer) {
         Customer entity = mapper.toEntity(customer);
         entity.setCreatedDate(LocalDateTime.now());
@@ -117,6 +119,7 @@ public class CustomerServiceImpl implements CustomerService {
      * @param customer {@link CustomerDTO}.
      */
     @Override
+    @CacheEvict(value = Constants.CACHE_CUSTOMERS, allEntries = true)
     public void updateCustomer(Long id, CustomerDTO customer) {
         if (!repository.exists(id)) {
             throw new NotFoundException();
@@ -131,6 +134,7 @@ public class CustomerServiceImpl implements CustomerService {
      * @param id уникальный идентификатор.
      */
     @Override
+    @CacheEvict(value = Constants.CACHE_CUSTOMERS, allEntries = true)
     public void deleteCustomer(Long id) {
         if (!repository.exists(id)) {
             throw new NotFoundException();

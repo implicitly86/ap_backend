@@ -15,6 +15,7 @@ import com.implicitly.utils.UserUtils;
 import com.implicitly.utils.mapper.order.OrderMapper;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -83,6 +84,7 @@ public class OrderServiceImpl implements OrderService {
      * @param order {@link OrderDTO}.
      */
     @Override
+    @CacheEvict(value = Constants.CACHE_ORDERS, allEntries = true)
     public OrderDTO saveOrder(OrderDTO order) {
         Order entity = mapper.toEntity(order);
         entity.setCreatedDate(LocalDateTime.now());
@@ -102,6 +104,7 @@ public class OrderServiceImpl implements OrderService {
      * @param order {@link OrderDTO}.
      */
     @Override
+    @CacheEvict(value = Constants.CACHE_ORDERS, allEntries = true)
     public void updateOrder(Long id, OrderDTO order) {
         if (!repository.exists(id)) {
             throw new NotFoundException();
@@ -118,6 +121,7 @@ public class OrderServiceImpl implements OrderService {
      * @param id уникальный идентификатор.
      */
     @Override
+    @CacheEvict(value = Constants.CACHE_ORDERS, allEntries = true)
     public void deleteOrder(Long id) {
         if (!repository.exists(id)) {
             throw new NotFoundException();

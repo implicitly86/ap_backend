@@ -12,6 +12,7 @@ import com.implicitly.persistence.deliverypoint.DeliveryPointRepository;
 import com.implicitly.service.DeliveryPointService;
 import com.implicitly.utils.mapper.deliverypoint.DeliveryPointMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -80,6 +81,7 @@ public class DeliveryPointServiceImpl implements DeliveryPointService {
      * @param deliveryPoint {@link DeliveryPointDTO}.
      */
     @Override
+    @CacheEvict(value = Constants.CACHE_DELIVERY_POINTS, allEntries = true)
     public DeliveryPointDTO saveDeliveryPoint(DeliveryPointDTO deliveryPoint) {
         DeliveryPoint entity = repository.saveAndFlush(mapper.toEntity(deliveryPoint));
         return mapper.toDto(entity);
@@ -92,6 +94,7 @@ public class DeliveryPointServiceImpl implements DeliveryPointService {
      * @param deliveryPoint {@link DeliveryPointDTO}.
      */
     @Override
+    @CacheEvict(value = Constants.CACHE_DELIVERY_POINTS, allEntries = true)
     public void updateDeliveryPoint(Long id, DeliveryPointDTO deliveryPoint) {
         if (!repository.exists(id)) {
             throw new NotFoundException();
@@ -106,6 +109,7 @@ public class DeliveryPointServiceImpl implements DeliveryPointService {
      * @param id уникальный идентификатор.
      */
     @Override
+    @CacheEvict(value = Constants.CACHE_DELIVERY_POINTS, allEntries = true)
     public void deleteDeliveryPoint(Long id) {
         if (!repository.exists(id)) {
             throw new NotFoundException();
