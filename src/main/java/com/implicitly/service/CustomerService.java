@@ -63,4 +63,13 @@ public interface CustomerService {
      */
     Page<OrderDTO> getOrders(Long id, Pageable pageable);
 
+    /**
+     * Поиск {@link CustomerDTO} по фильтру.
+     *
+     * @param searchFilter фильтр.
+     * @param pageable {@link Pageable}.
+     * @return {@link Page<CustomerDTO>}.
+     */
+    Page<CustomerDTO> search(CustomerDTO searchFilter, Pageable pageable);
+
 }

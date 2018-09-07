@@ -4,5 +4,6 @@ build/
 out/
 target/
 logs/
+generated/
 *log
 *iml

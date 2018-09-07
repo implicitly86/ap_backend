@@ -5,6 +5,7 @@
 package com.implicitly.utils.mapper.customer;
 
 import com.implicitly.domain.customer.Customer;
+import com.implicitly.domain.customer.CustomerType;
 import com.implicitly.dto.customer.CustomerDTO;
 import com.implicitly.utils.mapper.EntityMapper;
 import com.implicitly.utils.mapper.security.UserMapper;
@@ -49,6 +50,11 @@ public class CustomerMapper implements EntityMapper<Customer, CustomerDTO> {
         CustomerDTO target = CustomerDTO.builder().build();
         BeanUtils.copyProperties(source, target);
         target.setAuthor(userMapper.toDto(source.getAuthor()));
+        if (source.getType() == CustomerType.NATURAL_PERSON) {
+            target.setName(
+                    String.format("%s %s %s", source.getLastName(), source.getFirstName(), source.getMiddleName())
+            );
+        }
         return target;
     }
 
@@ -66,6 +72,9 @@ public class CustomerMapper implements EntityMapper<Customer, CustomerDTO> {
         Customer target = Customer.builder().build();
         BeanUtils.copyProperties(source, target);
         target.setAuthor(userMapper.toEntity(source.getAuthor()));
+        if (source.getType() == CustomerType.NATURAL_PERSON) {
+            target.setName("");
+        }
         return target;
     }
 

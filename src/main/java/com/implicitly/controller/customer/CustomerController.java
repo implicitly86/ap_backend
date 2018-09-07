@@ -114,4 +114,16 @@ public class CustomerController {
         return ok(customerService.getOrders(id, pageable));
     }
 
+    /**
+     * Поиск {@link CustomerDTO} по фильтру.
+     *
+     * @param searchFilter фильтр.
+     * @param pageable {@link Pageable}.
+     * @return {@link Page<CustomerDTO>}.
+     */
+    @PostMapping(value = "/customer/search", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Page<CustomerDTO>> search(@RequestBody CustomerDTO searchFilter, Pageable pageable) {
+        return ok(customerService.search(searchFilter, pageable));
+    }
+
 }

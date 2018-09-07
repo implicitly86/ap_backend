@@ -6,6 +6,7 @@ package com.implicitly.service.impl;
 
 import com.implicitly.constants.Constants;
 import com.implicitly.domain.customer.Customer;
+import com.implicitly.domain.customer.Customer_;
 import com.implicitly.dto.customer.CustomerDTO;
 import com.implicitly.dto.order.OrderDTO;
 import com.implicitly.exceptions.NotFoundException;
@@ -16,13 +17,17 @@ import com.implicitly.utils.UserUtils;
 import com.implicitly.utils.mapper.customer.CustomerMapper;
 import com.implicitly.utils.mapper.order.OrderMapper;
 import java.time.LocalDateTime;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  * Реализация сервиса работы с сущностью {@link CustomerDTO}
@@ -156,6 +161,55 @@ public class CustomerServiceImpl implements CustomerService {
             throw new NotFoundException();
         }
         return orderRepository.findAllByCustomer(customer, pageable).map(orderMapper::toDto);
+    }
+
+    /**
+     * Поиск {@link CustomerDTO} по фильтру.
+     *
+     * @param searchFilter фильтр.
+     * @param pageable {@link Pageable}.
+     * @return {@link Page<CustomerDTO>}.
+     */
+    @Override
+    public Page<CustomerDTO> search(CustomerDTO searchFilter, Pageable pageable) {
+        Specifications<Customer> specifications = Specifications.where(null);
+        if (searchFilter.getId() != null) {
+            specifications = specifications.and((root, query, cb) ->
+                    cb.equal(root.get(Customer_.id), searchFilter.getId())
+            );
+        }
+        if (!StringUtils.isEmpty(searchFilter.getName())) {
+            Pattern pattern = Pattern.compile("([\\wА-я]+)?( ([\\wА-я]+))?( ([\\wА-я]+))?");
+            Matcher matcher = pattern.matcher(searchFilter.getName());
+            Specifications<Customer> specification = null;
+            if (matcher.find()) {
+                specification = Specifications.where(null);
+                if (!StringUtils.isEmpty(matcher.group(1))) {
+                    specification = specification.and((root, query, cb) ->
+                            cb.like(cb.lower(root.get(Customer_.lastName)), "%" + matcher.group(1) + "%")
+                    );
+                }
+                if (!StringUtils.isEmpty(matcher.group(3))) {
+                    specification = specification.and((root, query, cb) ->
+                            cb.like(cb.lower(root.get(Customer_.firstName)), "%" + matcher.group(3) + "%")
+                    );
+                }
+                if (!StringUtils.isEmpty(matcher.group(5))) {
+                    specification = specification.and((root, query, cb) ->
+                            cb.like(cb.lower(root.get(Customer_.middleName)), "%" + matcher.group(5) + "%")
+                    );
+                }
+            }
+            Specifications<Customer> nameSpecification = Specifications.where((root, query, cb) ->
+                    cb.like(cb.lower(root.get(Customer_.name)), "%" + searchFilter.getName() + "%")
+            );
+            if (specification != null) {
+                specifications = specifications.and(nameSpecification.or(specification));
+            } else {
+                specifications = specifications.and(nameSpecification);
+            }
+        }
+        return repository.findAll(specifications, pageable).map(mapper::toDto);
     }
 
 }

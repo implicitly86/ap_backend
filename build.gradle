@@ -10,6 +10,10 @@ buildscript {
     }
 }
 
+plugins {
+    id "at.comm_unity.gradle.plugins.jpamodelgen" version "1.1.4"
+}
+
 group 'com.implicitly'
 version '0.0.1'
 
@@ -66,6 +70,19 @@ dependencies {
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.5.14.RELEASE'
     testCompile group: 'org.testng', name: 'testng', version: '6.11'
     testCompile group: 'org.mockito', name: 'mockito-core', version: '2.11.0'
+}
+
+jpaModelgen {
+    library = "org.hibernate:hibernate-jpamodelgen:5.0.12.Final"
+    jpaModelgenSourcesDir = 'src/generated/java'
+}
+
+compileJpaModelgen {
+    includes += [
+            '**/domain/**/*.java',
+            '**/persistence/*.java',
+            '**/utils/converter/*.java'
+    ]
 }
 
 configurations {
