@@ -101,4 +101,16 @@ public class DeliveryPointController {
         return noContent().build();
     }
 
+    /**
+     * Поиск {@link DeliveryPointDTO} по фильтру.
+     *
+     * @param searchFilter фильтр.
+     * @param pageable {@link Pageable}.
+     * @return {@link Page<DeliveryPointDTO>}.
+     */
+    @PostMapping(value = "/delivery-point/search", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Page<DeliveryPointDTO>> search(@RequestBody DeliveryPointDTO searchFilter, Pageable pageable) {
+        return ok(deliveryPointService.search(searchFilter, pageable));
+    }
+
 }

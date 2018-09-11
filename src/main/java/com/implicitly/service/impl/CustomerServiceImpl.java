@@ -179,29 +179,29 @@ public class CustomerServiceImpl implements CustomerService {
             );
         }
         if (!StringUtils.isEmpty(searchFilter.getName())) {
-            Pattern pattern = Pattern.compile("([\\wА-я]+)?( ([\\wА-я]+))?( ([\\wА-я]+))?");
+            Pattern pattern = Pattern.compile("([\\wА-я]+)?( ([\\wА-я]+))?( ([\\wА-я]+))?$");
             Matcher matcher = pattern.matcher(searchFilter.getName());
             Specifications<Customer> specification = null;
             if (matcher.find()) {
                 specification = Specifications.where(null);
                 if (!StringUtils.isEmpty(matcher.group(1))) {
                     specification = specification.and((root, query, cb) ->
-                            cb.like(cb.lower(root.get(Customer_.lastName)), "%" + matcher.group(1) + "%")
+                            cb.like(cb.lower(root.get(Customer_.lastName)), "%" + matcher.group(1).toLowerCase() + "%")
                     );
                 }
                 if (!StringUtils.isEmpty(matcher.group(3))) {
                     specification = specification.and((root, query, cb) ->
-                            cb.like(cb.lower(root.get(Customer_.firstName)), "%" + matcher.group(3) + "%")
+                            cb.like(cb.lower(root.get(Customer_.firstName)), "%" + matcher.group(3).toLowerCase() + "%")
                     );
                 }
                 if (!StringUtils.isEmpty(matcher.group(5))) {
                     specification = specification.and((root, query, cb) ->
-                            cb.like(cb.lower(root.get(Customer_.middleName)), "%" + matcher.group(5) + "%")
+                            cb.like(cb.lower(root.get(Customer_.middleName)), "%" + matcher.group(5).toLowerCase() + "%")
                     );
                 }
             }
             Specifications<Customer> nameSpecification = Specifications.where((root, query, cb) ->
-                    cb.like(cb.lower(root.get(Customer_.name)), "%" + searchFilter.getName() + "%")
+                    cb.like(cb.lower(root.get(Customer_.name)), "%" + searchFilter.getName().toLowerCase() + "%")
             );
             if (specification != null) {
                 specifications = specifications.and(nameSpecification.or(specification));

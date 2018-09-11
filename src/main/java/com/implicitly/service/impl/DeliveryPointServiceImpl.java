@@ -6,6 +6,7 @@ package com.implicitly.service.impl;
 
 import com.implicitly.constants.Constants;
 import com.implicitly.domain.deliverypoint.DeliveryPoint;
+import com.implicitly.domain.deliverypoint.DeliveryPoint_;
 import com.implicitly.dto.deliverypoint.DeliveryPointDTO;
 import com.implicitly.exceptions.NotFoundException;
 import com.implicitly.persistence.deliverypoint.DeliveryPointRepository;
@@ -16,7 +17,9 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  * Реализация сервиса работы с сущностью {@link DeliveryPointDTO}
@@ -115,6 +118,29 @@ public class DeliveryPointServiceImpl implements DeliveryPointService {
             throw new NotFoundException();
         }
         repository.delete(id);
+    }
+
+    /**
+     * Поиск {@link DeliveryPointDTO} по фильтру.
+     *
+     * @param searchFilter фильтр.
+     * @param pageable {@link Pageable}.
+     * @return {@link Page<DeliveryPointDTO>}.
+     */
+    @Override
+    public Page<DeliveryPointDTO> search(DeliveryPointDTO searchFilter, Pageable pageable) {
+        Specifications<DeliveryPoint> specifications = Specifications.where(null);
+        if (searchFilter.getId() != null) {
+            specifications = specifications.and((root, query, cb) ->
+                    cb.equal(root.get(DeliveryPoint_.id), searchFilter.getId())
+            );
+        }
+        if (!StringUtils.isEmpty(searchFilter.getName())) {
+            specifications = specifications.and((root, query, cb) ->
+                    cb.like(cb.lower(root.get(DeliveryPoint_.name)), "%" + searchFilter.getName().toLowerCase() + "%")
+            );
+        }
+        return repository.findAll(specifications, pageable).map(mapper::toDto);
     }
 
 }

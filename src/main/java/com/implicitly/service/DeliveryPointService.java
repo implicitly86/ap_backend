@@ -53,4 +53,13 @@ public interface DeliveryPointService {
      */
     void deleteDeliveryPoint(Long id);
 
+    /**
+     * Поиск {@link DeliveryPointDTO} по фильтру.
+     *
+     * @param searchFilter фильтр.
+     * @param pageable {@link Pageable}.
+     * @return {@link Page<DeliveryPointDTO>}.
+     */
+    Page<DeliveryPointDTO> search(DeliveryPointDTO searchFilter, Pageable pageable);
+
 }
