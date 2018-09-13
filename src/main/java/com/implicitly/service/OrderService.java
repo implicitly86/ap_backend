@@ -43,8 +43,9 @@ public interface OrderService {
      *
      * @param id уникальный идентификатор.
      * @param order {@link OrderDTO}.
+     * @return {@link OrderDTO}.
      */
-    void updateOrder(Long id, OrderDTO order);
+    OrderDTO updateOrder(Long id, OrderDTO order);
 
     /**
      * Удаление {@link OrderDTO} по уникальному идентификатору.

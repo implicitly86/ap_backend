@@ -122,15 +122,17 @@ public class CustomerServiceImpl implements CustomerService {
      *
      * @param id уникальный идентификатор.
      * @param customer {@link CustomerDTO}.
+     * @return {@link CustomerDTO}
      */
     @Override
     @CacheEvict(value = Constants.CACHE_CUSTOMERS, allEntries = true)
-    public void updateCustomer(Long id, CustomerDTO customer) {
+    public CustomerDTO updateCustomer(Long id, CustomerDTO customer) {
         if (!repository.exists(id)) {
             throw new NotFoundException();
         }
         Customer entity = mapper.toEntity(customer);
-        repository.save(entity);
+        Customer result = repository.saveAndFlush(entity);
+        return mapper.toDto(result);
     }
 
     /**

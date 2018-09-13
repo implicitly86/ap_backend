@@ -36,6 +36,7 @@ public interface CustomerService {
      * Сохранение {@link CustomerDTO}
      *
      * @param customer {@link CustomerDTO}.
+     * @return {@link CustomerDTO}
      */
     CustomerDTO saveCustomer(CustomerDTO customer);
 
@@ -44,8 +45,9 @@ public interface CustomerService {
      *
      * @param id уникальный идентификатор.
      * @param customer {@link CustomerDTO}.
+     * @return {@link CustomerDTO}
      */
-    void updateCustomer(Long id, CustomerDTO customer);
+    CustomerDTO updateCustomer(Long id, CustomerDTO customer);
 
     /**
      * Удаление {@link CustomerDTO} по уникальному идентификатору.

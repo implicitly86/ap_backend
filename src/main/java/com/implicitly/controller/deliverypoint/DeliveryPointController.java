@@ -84,10 +84,9 @@ public class DeliveryPointController {
      * @param deliveryPoint {@link DeliveryPointDTO}.
      */
     @PutMapping(value = "/delivery-point/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Void> updateDeliveryPoint(
+    public ResponseEntity<DeliveryPointDTO> updateDeliveryPoint(
             @PathVariable("id") Long id, @RequestBody DeliveryPointDTO deliveryPoint) {
-        deliveryPointService.updateDeliveryPoint(id, deliveryPoint);
-        return noContent().build();
+        return ok(deliveryPointService.updateDeliveryPoint(id, deliveryPoint));
     }
 
     /**

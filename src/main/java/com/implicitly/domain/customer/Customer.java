@@ -49,15 +49,8 @@ public class Customer implements IdentifiedEntity {
      * Уникальный идентификатор.
      */
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "customer_gen"
-    )
-    @SequenceGenerator(
-            name = "customer_gen",
-            sequenceName = "sq_customer"
-
-    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customer_gen")
+    @SequenceGenerator(name = "customer_gen", sequenceName = "sq_customer", allocationSize = 1)
     @Column(name = "id", nullable = false, unique = true)
     private Long id;
 

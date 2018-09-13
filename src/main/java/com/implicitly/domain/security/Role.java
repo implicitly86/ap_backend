@@ -35,15 +35,8 @@ public class Role implements IdentifiedEntity {
      * Уникальный идентификатор.
      */
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "role_gen"
-    )
-    @SequenceGenerator(
-            name = "role_gen",
-            sequenceName = "sq_role"
-
-    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_gen")
+    @SequenceGenerator(name = "role_gen", sequenceName = "sq_role", allocationSize = 1)
     @Column(name = "id", nullable = false, unique = true)
     private Long id;
 

@@ -50,15 +50,8 @@ public class Order implements IdentifiedEntity {
      * Уникальный идентификатор.
      */
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "order_gen"
-    )
-    @SequenceGenerator(
-            name = "order_gen",
-            sequenceName = "sq_order"
-
-    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_gen")
+    @SequenceGenerator(name = "order_gen", sequenceName = "sq_order", allocationSize = 1)
     @Column(name = "id", nullable = false, unique = true)
     private Long id;
 

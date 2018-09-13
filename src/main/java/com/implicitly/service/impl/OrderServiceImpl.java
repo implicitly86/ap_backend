@@ -102,17 +102,19 @@ public class OrderServiceImpl implements OrderService {
      *
      * @param id уникальный идентификатор.
      * @param order {@link OrderDTO}.
+     * @return {@link OrderDTO}.
      */
     @Override
     @CacheEvict(value = Constants.CACHE_ORDERS, allEntries = true)
-    public void updateOrder(Long id, OrderDTO order) {
+    public OrderDTO updateOrder(Long id, OrderDTO order) {
         if (!repository.exists(id)) {
             throw new NotFoundException();
         }
         Order entity = mapper.toEntity(order);
         entity.setModifiedDate(LocalDateTime.now());
         UserUtils.getCurrentUser().ifPresent(entity::setModifiedBy);
-        repository.save(entity);
+        Order result = repository.saveAndFlush(entity);
+        return mapper.toDto(result);
     }
 
     /**

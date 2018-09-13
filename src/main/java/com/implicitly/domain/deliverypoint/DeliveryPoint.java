@@ -41,15 +41,8 @@ public class DeliveryPoint implements IdentifiedEntity {
      * Уникальный идентификатор.
      */
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "deliverypoint_gen"
-    )
-    @SequenceGenerator(
-            name = "deliverypoint_gen",
-            sequenceName = "sq_deliverypoint"
-
-    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "deliverypoint_gen")
+    @SequenceGenerator(name = "deliverypoint_gen", sequenceName = "sq_deliverypoint", allocationSize = 1)
     @Column(name = "id", nullable = false, unique = true)
     private Long id;
 

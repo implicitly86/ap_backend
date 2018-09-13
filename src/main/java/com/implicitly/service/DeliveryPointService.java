@@ -43,8 +43,9 @@ public interface DeliveryPointService {
      *
      * @param id уникальный идентификатор.
      * @param deliveryPoint {@link DeliveryPointDTO}.
+     * @return {@link DeliveryPointDTO}.
      */
-    void updateDeliveryPoint(Long id, DeliveryPointDTO deliveryPoint);
+    DeliveryPointDTO updateDeliveryPoint(Long id, DeliveryPointDTO deliveryPoint);
 
     /**
      * Удаление {@link DeliveryPointDTO} по уникальному идентификатору.

@@ -84,10 +84,9 @@ public class OrderController {
      * @param order {@link OrderDTO}.
      */
     @PutMapping(value = "/order/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Void> updateOrder(
+    public ResponseEntity<OrderDTO> updateOrder(
             @PathVariable("id") Long id, @RequestBody OrderDTO order) {
-        orderService.updateOrder(id, order);
-        return noContent().build();
+        return ok(orderService.updateOrder(id, order));
     }
 
     /**

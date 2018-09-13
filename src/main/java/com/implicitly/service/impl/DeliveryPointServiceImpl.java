@@ -95,15 +95,17 @@ public class DeliveryPointServiceImpl implements DeliveryPointService {
      *
      * @param id уникальный идентификатор.
      * @param deliveryPoint {@link DeliveryPointDTO}.
+     * @return {@link DeliveryPointDTO}.
      */
     @Override
     @CacheEvict(value = Constants.CACHE_DELIVERY_POINTS, allEntries = true)
-    public void updateDeliveryPoint(Long id, DeliveryPointDTO deliveryPoint) {
+    public DeliveryPointDTO updateDeliveryPoint(Long id, DeliveryPointDTO deliveryPoint) {
         if (!repository.exists(id)) {
             throw new NotFoundException();
         }
         DeliveryPoint entity = mapper.toEntity(deliveryPoint);
-        repository.save(entity);
+        DeliveryPoint result = repository.saveAndFlush(entity);
+        return mapper.toDto(result);
     }
 
     /**

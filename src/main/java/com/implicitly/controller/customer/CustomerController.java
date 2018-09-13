@@ -85,10 +85,9 @@ public class CustomerController {
      * @param customer {@link CustomerDTO}.
      */
     @PutMapping(value = "/customer/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Void> updateCustomer(
+    public ResponseEntity<CustomerDTO> updateCustomer(
             @PathVariable("id") Long id, @RequestBody CustomerDTO customer) {
-        customerService.updateCustomer(id, customer);
-        return noContent().build();
+        return ok(customerService.updateCustomer(id, customer));
     }
 
     /**
