@@ -4,13 +4,10 @@
 
 package com.implicitly.controller.security;
 
-import static org.springframework.http.ResponseEntity.ok;
-
 import com.implicitly.dto.security.CredentialsDTO;
 import com.implicitly.dto.security.TokenDTO;
 import com.implicitly.persistence.security.UserRepository;
 import com.implicitly.security.JwtTokenProvider;
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,6 +18,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
+
+import static org.springframework.http.ResponseEntity.ok;
 
 /**
  * Реализация {@link RestController}, обслуживающая запросы безопасности приложения.
@@ -51,14 +52,14 @@ public class AuthController {
      * Конструктор.
      *
      * @param authenticationManager {@link AuthenticationManager}
-     * @param userRepository {@link UserRepository}
-     * @param passwordEncoder {@link PasswordEncoder}
-     * @param tokenProvider {@link JwtTokenProvider}
+     * @param userRepository        {@link UserRepository}
+     * @param passwordEncoder       {@link PasswordEncoder}
+     * @param tokenProvider         {@link JwtTokenProvider}
      */
     @Autowired
     public AuthController(AuthenticationManager authenticationManager,
-            UserRepository userRepository, PasswordEncoder passwordEncoder,
-            JwtTokenProvider tokenProvider) {
+                          UserRepository userRepository, PasswordEncoder passwordEncoder,
+                          JwtTokenProvider tokenProvider) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;

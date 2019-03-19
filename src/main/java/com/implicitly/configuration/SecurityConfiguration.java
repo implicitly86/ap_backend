@@ -8,7 +8,6 @@ import com.implicitly.security.JwtAuthenticationEntryPoint;
 import com.implicitly.security.JwtAuthenticationFilter;
 import com.implicitly.service.impl.CustomUserDetailsService;
 import com.implicitly.utils.filter.CustomCorsFilter;
-import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +24,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import javax.annotation.PostConstruct;
 
 /**
  * Конфигурация безопасности приложения.
@@ -63,7 +64,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
      */
     @Autowired
     public SecurityConfiguration(CustomUserDetailsService userDetailsService,
-            JwtAuthenticationEntryPoint unauthorizedHandler) {
+                                 JwtAuthenticationEntryPoint unauthorizedHandler) {
         this.userDetailsService = userDetailsService;
         this.unauthorizedHandler = unauthorizedHandler;
     }
@@ -98,34 +99,38 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .cors()
-                    .and()
+                .and()
                 .csrf()
-                    .disable()
+                .disable()
                 .exceptionHandling()
                 .authenticationEntryPoint(unauthorizedHandler)
-                    .and()
+                .and()
                 .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                    .and()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
                 .authorizeRequests()
-                    .antMatchers(HttpMethod.OPTIONS, "/**")
-                        .permitAll()
-                    .antMatchers(
-                            "/login",
-                            "/**/api-docs",
-                            "/swagger**",
-                            "/swagger-resources/**",
-                            "/**/*.png",
-                            "/**/*.gif",
-                            "/**/*.svg",
-                            "/**/*.jpg",
-                            "/**/*.html",
-                            "/**/*.css",
-                            "/**/*.js"
-                    )
-                        .permitAll()
-                    .anyRequest()
-                        .authenticated();
+                .antMatchers(HttpMethod.OPTIONS, "/**")
+                .permitAll()
+                .antMatchers(
+                        "/login",
+                        "/**/api-docs",
+                        "/swagger**",
+                        "/swagger-resources/**",
+                        "/**/*.png",
+                        "/**/*.gif",
+                        "/**/*.svg",
+                        "/**/*.jpg",
+                        "/**/*.html",
+                        "/**/*.css",
+                        "/**/*.js"
+                )
+                .permitAll()
+                /*
+                .antMatchers("/admin/**")
+                    .hasAuthority("admin")
+                */
+                .anyRequest()
+                .authenticated();
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(new CustomCorsFilter(), JwtAuthenticationFilter.class);
     }

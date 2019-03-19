@@ -6,14 +6,16 @@
     <springProperty name="ELK_PORT" source="elk.port" defaultValue="5044"/>
     <appender name="STASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
         <destination>${ELK_HOST}:${ELK_PORT}</destination>
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder" >
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
             <customFields>{"app_name":"ap_backend"}</customFields>
         </encoder>
     </appender>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%magenta(%d{HH:mm:ss.SSS dd.MM.yyyy}) %highlight([%level]) %cyan([%thread]) %yellow([%logger{36}]) : %msg%n</pattern>
+            <pattern>%magenta(%d{HH:mm:ss.SSS dd.MM.yyyy}) %highlight([%level]) %cyan([%thread]) %yellow([%logger{36}])
+                : %msg%n
+            </pattern>
         </encoder>
         <withJansi>true</withJansi>
     </appender>

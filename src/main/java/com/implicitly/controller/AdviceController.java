@@ -4,20 +4,22 @@
 
 package com.implicitly.controller;
 
-import static com.implicitly.constants.Constants.BODY;
-import static com.implicitly.constants.Constants.MESSAGE;
-
 import com.implicitly.exceptions.NotFoundException;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.implicitly.constants.Constants.BODY;
+import static com.implicitly.constants.Constants.MESSAGE;
 
 /**
  * {@link ControllerAdvice}.
@@ -52,6 +54,16 @@ public class AdviceController {
     }
 
     /**
+     * Обработка исключения {@link AccessDeniedException}
+     *
+     * @param ex {@link AccessDeniedException}
+     */
+    @ExceptionHandler(value = AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public void handleAccessDeniedException(AccessDeniedException ex) {
+    }
+
+    /**
      *
      */
     @ExceptionHandler(value = BadCredentialsException.class)
@@ -68,7 +80,7 @@ public class AdviceController {
     /**
      * Генерация сообщения об ошибке.
      *
-     * @param ex исключение
+     * @param ex     исключение
      * @param status {@link HttpStatus}
      * @return данные  ошибки
      */

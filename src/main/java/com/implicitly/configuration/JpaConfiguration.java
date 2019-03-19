@@ -6,7 +6,6 @@ package com.implicitly.configuration;
 
 import com.implicitly.constants.Constants;
 import com.zaxxer.hikari.HikariDataSource;
-import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
@@ -24,6 +23,8 @@ import org.springframework.data.web.SortHandlerMethodArgumentResolver;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import javax.annotation.PostConstruct;
 
 /**
  * Конфигурация подключения к БД.
@@ -64,7 +65,7 @@ public class JpaConfiguration {
     /**
      * Конструктор.
      *
-     * @param dsProperties {@link DataSourceProperties}
+     * @param dsProperties  {@link DataSourceProperties}
      * @param jpaProperties {@link JpaProperties}
      */
     @Autowired
