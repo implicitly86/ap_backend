@@ -4,7 +4,10 @@
 
 package com.implicitly.configuration;
 
+import com.implicitly.security.JwtAuthenticationEntryPoint;
+import com.implicitly.security.JwtAuthenticationFilter;
 import com.implicitly.service.CustomUserDetailsService;
+import com.implicitly.utils.filter.CustomCorsFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +23,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.annotation.PostConstruct;
 
@@ -52,7 +56,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     /**
      * {@link JwtAuthenticationEntryPoint}
      */
-    //private final JwtAuthenticationEntryPoint unauthorizedHandler;
+    private final JwtAuthenticationEntryPoint unauthorizedHandler;
 
     /**
      * {@link PostConstruct}
@@ -82,52 +86,56 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        // formatter: off
         http
                 .cors()
                     .and()
                 .csrf()
                     .disable()
                 .exceptionHandling()
-                    //.authenticationEntryPoint(unauthorizedHandler)
+                    .authenticationEntryPoint(unauthorizedHandler)
                     .and()
                 .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
+                    .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.OPTIONS, "/**")
-                .permitAll()
-                .antMatchers(
-                        "/login",
-                        "/actuator",
-                        "/actuator/**",
-                        "/**/api-docs",
-                        "/swagger**",
-                        "/swagger-resources/**",
-                        "/**/*.png",
-                        "/**/*.gif",
-                        "/**/*.svg",
-                        "/**/*.jpg",
-                        "/**/*.html",
-                        "/**/*.css",
-                        "/**/*.js",
-                        "/customer",
-                        "/customer/**",
-                        "/delivery-point",
-                        "/delivery-point/**",
-                        "/order",
-                        "/order/**"
-                )
-                .permitAll()
-                /*
-                .antMatchers("/admin/**")
-                    .hasAuthority("admin")
-                */
-                .anyRequest()
-                .authenticated();
-        /*
+                    .antMatchers(HttpMethod.OPTIONS, "/**")
+                        .permitAll()
+                    .antMatchers(HttpMethod.GET, "/")
+                        .permitAll()
+                    .antMatchers(
+                            "/login",
+                            "/actuator",
+                            "/actuator/**",
+                            "/**/api-docs",
+                            "/swagger**",
+                            "/swagger-resources/**",
+                            "/**/*.png",
+                            "/**/*.gif",
+                            "/**/*.svg",
+                            "/**/*.jpg",
+                            "/**/*.html",
+                            "/**/*.css",
+                            "/**/*.js"
+//                            ,
+//                            "/**/customer",
+//                            "/**/customer/**",
+//                            "/**/delivery-point",
+//                            "/**/delivery-point/**",
+//                            "/**/order",
+//                            "/**/order/**"
+
+                    )
+                        .permitAll()
+                    /*
+                    .antMatchers("/admin/**")
+                        .hasAuthority("admin")
+                    */
+                    .anyRequest()
+                        .authenticated();
+        // formatter: on
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(new CustomCorsFilter(), JwtAuthenticationFilter.class);
-        */
     }
 
     /**
@@ -150,11 +158,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     /**
      * {@link JwtAuthenticationFilter}
      */
-    /*
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
         return new JwtAuthenticationFilter();
     }
-    */
 
 }

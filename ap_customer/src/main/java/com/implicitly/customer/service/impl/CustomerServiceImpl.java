@@ -5,9 +5,11 @@
 package com.implicitly.customer.service.impl;
 
 import com.implicitly.constants.Constants;
+import com.implicitly.customer.feign.OrderService;
 import com.implicitly.customer.persistence.CustomerRepository;
 import com.implicitly.customer.service.CustomerService;
 import com.implicitly.domain.customer.Customer;
+import com.implicitly.domain.customer.Customer_;
 import com.implicitly.dto.customer.CustomerDTO;
 import com.implicitly.dto.order.OrderDTO;
 import com.implicitly.utils.UserUtils;
@@ -15,12 +17,18 @@ import com.implicitly.utils.mapper.customer.CustomerMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Реализация сервиса работы с сущностью {@link CustomerDTO}
@@ -38,9 +46,9 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository repository;
 
     /**
-     * {@link OrderRepository}
+     * {@link OrderService}
      */
-    //private final OrderRepository orderRepository;
+    private final OrderService orderService;
 
     /**
      * {@link CustomerMapper}
@@ -71,7 +79,7 @@ public class CustomerServiceImpl implements CustomerService {
      * @return {@link CustomerDTO}.
      */
     @Override
-    @Cacheable(value = Constants.CACHE_CUSTOMERS, key = "#p0")
+    @Cacheable(value = Constants.CACHE_CUSTOMER, key = "#p0")
     public CustomerDTO getCustomer(Long id) {
         Customer customer = repository.findById(id).orElseThrow(RuntimeException::new);
         return mapper.toDto(customer);
@@ -83,7 +91,10 @@ public class CustomerServiceImpl implements CustomerService {
      * @param customer {@link CustomerDTO}.
      */
     @Override
-    @CacheEvict(value = Constants.CACHE_CUSTOMERS, allEntries = true)
+    @Caching(
+            evict = @CacheEvict(value = Constants.CACHE_CUSTOMERS, allEntries = true),
+            put = @CachePut(value = Constants.CACHE_CUSTOMER, key = "#result.id")
+    )
     public CustomerDTO saveCustomer(CustomerDTO customer) {
         Customer entity = mapper.toEntity(customer);
         entity.setCreatedDate(LocalDateTime.now());
@@ -100,7 +111,13 @@ public class CustomerServiceImpl implements CustomerService {
      * @return {@link CustomerDTO}
      */
     @Override
-    @CacheEvict(value = Constants.CACHE_CUSTOMERS, allEntries = true)
+    @Caching(
+            evict = {
+                    @CacheEvict(value = Constants.CACHE_CUSTOMER, key = "#p0"),
+                    @CacheEvict(value = Constants.CACHE_CUSTOMERS, allEntries = true)
+            },
+            put = @CachePut(value = Constants.CACHE_CUSTOMER, key = "#result.id")
+    )
     public CustomerDTO updateCustomer(Long id, CustomerDTO customer) {
         if (!repository.existsById(id)) {
             throw new RuntimeException();
@@ -116,7 +133,12 @@ public class CustomerServiceImpl implements CustomerService {
      * @param id уникальный идентификатор.
      */
     @Override
-    @CacheEvict(value = Constants.CACHE_CUSTOMERS, allEntries = true)
+    @Caching(
+            evict = {
+                    @CacheEvict(value = Constants.CACHE_CUSTOMER, key = "#p0"),
+                    @CacheEvict(value = Constants.CACHE_CUSTOMERS, allEntries = true)
+            }
+    )
     public void deleteCustomer(Long id) {
         if (!repository.existsById(id)) {
             throw new RuntimeException();
@@ -133,14 +155,8 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public Page<OrderDTO> getOrders(Long id, Pageable pageable) {
-        /*
-        Customer customer = repository.findOne(id);
-        if (customer == null) {
-            throw new NotFoundException();
-        }
-        return orderRepository.findAllByCustomer(customer, pageable).map(orderMapper::toDto);
-        */
-        return null;
+        Customer customer = repository.findById(id).orElseThrow(RuntimeException::new);
+        return orderService.getOrders(customer.getId(), pageable).getBody();
     }
 
     /**
@@ -152,7 +168,6 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public Page<CustomerDTO> search(CustomerDTO searchFilter, Pageable pageable) {
-        /*
         Specifications<Customer> specifications = Specifications.where(null);
         if (searchFilter.getId() != null) {
             specifications = specifications.and((root, query, cb) ->
@@ -191,8 +206,6 @@ public class CustomerServiceImpl implements CustomerService {
             }
         }
         return repository.findAll(specifications, pageable).map(mapper::toDto);
-        */
-        return null;
     }
 
 }

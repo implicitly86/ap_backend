@@ -1,5 +1,7 @@
 rootProject.name = 'ap_backend'
+include 'ap_auth'
 include 'ap_boot_starter'
 include 'ap_delivery_point'
 include 'ap_customer'
 include 'ap_order'
+include 'ap_gateway'

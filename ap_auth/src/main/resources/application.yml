@@ -1,5 +1,5 @@
 spring:
-  application.name: ap_customer
+  application.name: ap_auth
   datasource:
     url: ${JDBC_URL}
     driver-class-name: org.postgresql.Driver
@@ -38,7 +38,7 @@ spring:
     allow-bean-definition-overriding: true
 
 server:
-  port: 10010
+  port: 10040
   servlet:
     context-path: /api/v1
 

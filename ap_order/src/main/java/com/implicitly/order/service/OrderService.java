@@ -54,4 +54,12 @@ public interface OrderService {
      */
     void deleteOrder(Long id);
 
+    /**
+     * Получение списка {@link OrderDTO}, относящихся к определенному заказчику.
+     *
+     * @param customerId идентификатор заказчика.
+     * @param pageable {@link Pageable}
+     */
+    Page<OrderDTO> getCustomerOrders(Long customerId, Pageable pageable);
+
 }

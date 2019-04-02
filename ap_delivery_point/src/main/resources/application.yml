@@ -34,6 +34,8 @@ spring:
         serviceName: ${spring.application.name}
         hostname: ${HOSTNAME}
         health-check-path: ${server.servlet.context-path}/actuator/health
+  main:
+    allow-bean-definition-overriding: true
 
 server:
   port: 10020

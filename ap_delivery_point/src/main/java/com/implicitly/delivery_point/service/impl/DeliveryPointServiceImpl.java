@@ -8,15 +8,20 @@ import com.implicitly.constants.Constants;
 import com.implicitly.delivery_point.persistence.DeliveryPointRepository;
 import com.implicitly.delivery_point.service.DeliveryPointService;
 import com.implicitly.domain.deliverypoint.DeliveryPoint;
+import com.implicitly.domain.deliverypoint.DeliveryPoint_;
 import com.implicitly.dto.deliverypoint.DeliveryPointDTO;
 import com.implicitly.utils.mapper.deliverypoint.DeliveryPointMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  * Реализация сервиса работы с сущностью {@link DeliveryPointDTO}
@@ -57,6 +62,7 @@ public class DeliveryPointServiceImpl implements DeliveryPointService {
      * @return {@link DeliveryPointDTO}.
      */
     @Override
+    @Cacheable(value = Constants.CACHE_DELIVERY_POINT, key = "#p0")
     public DeliveryPointDTO getDeliveryPoint(Long id) {
         DeliveryPoint deliveryPoint = repository.findById(id).orElseThrow(RuntimeException::new);
         return mapper.toDto(deliveryPoint);
@@ -68,7 +74,10 @@ public class DeliveryPointServiceImpl implements DeliveryPointService {
      * @param deliveryPoint {@link DeliveryPointDTO}.
      */
     @Override
-    @CacheEvict(value = Constants.CACHE_DELIVERY_POINTS, allEntries = true)
+    @Caching(
+            evict = @CacheEvict(value = Constants.CACHE_DELIVERY_POINTS, allEntries = true),
+            put = @CachePut(value = Constants.CACHE_DELIVERY_POINT, key = "#result.id")
+    )
     public DeliveryPointDTO saveDeliveryPoint(DeliveryPointDTO deliveryPoint) {
         DeliveryPoint entity = repository.saveAndFlush(mapper.toEntity(deliveryPoint));
         return mapper.toDto(entity);
@@ -82,7 +91,13 @@ public class DeliveryPointServiceImpl implements DeliveryPointService {
      * @return {@link DeliveryPointDTO}.
      */
     @Override
-    @CacheEvict(value = Constants.CACHE_DELIVERY_POINTS, allEntries = true)
+    @Caching(
+            evict = {
+                    @CacheEvict(value = Constants.CACHE_DELIVERY_POINT, key = "#p0"),
+                    @CacheEvict(value = Constants.CACHE_DELIVERY_POINTS, allEntries = true)
+            },
+            put = @CachePut(value = Constants.CACHE_DELIVERY_POINT, key = "#result.id")
+    )
     public DeliveryPointDTO updateDeliveryPoint(Long id, DeliveryPointDTO deliveryPoint) {
         if (!repository.existsById(id)) {
             throw new RuntimeException();
@@ -98,7 +113,12 @@ public class DeliveryPointServiceImpl implements DeliveryPointService {
      * @param id уникальный идентификатор.
      */
     @Override
-    @CacheEvict(value = Constants.CACHE_DELIVERY_POINTS, allEntries = true)
+    @Caching(
+            evict = {
+                    @CacheEvict(value = Constants.CACHE_DELIVERY_POINT, key = "#p0"),
+                    @CacheEvict(value = Constants.CACHE_DELIVERY_POINTS, allEntries = true)
+            }
+    )
     public void deleteDeliveryPoint(Long id) {
         if (!repository.existsById(id)) {
             throw new RuntimeException();
@@ -115,7 +135,6 @@ public class DeliveryPointServiceImpl implements DeliveryPointService {
      */
     @Override
     public Page<DeliveryPointDTO> search(DeliveryPointDTO searchFilter, Pageable pageable) {
-        /*
         Specifications<DeliveryPoint> specifications = Specifications.where(null);
         if (searchFilter.getId() != null) {
             specifications = specifications.and((root, query, cb) ->
@@ -128,8 +147,6 @@ public class DeliveryPointServiceImpl implements DeliveryPointService {
             );
         }
         return repository.findAll(specifications, pageable).map(mapper::toDto);
-        */
-        return null;
     }
 
 }

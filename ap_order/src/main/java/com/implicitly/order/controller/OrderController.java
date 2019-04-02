@@ -75,8 +75,7 @@ public class OrderController {
      * @param order {@link OrderDTO}.
      */
     @PutMapping(value = "/order/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<OrderDTO> updateOrder(
-            @PathVariable("id") Long id, @RequestBody OrderDTO order) {
+    public ResponseEntity<OrderDTO> updateOrder(@PathVariable("id") Long id, @RequestBody OrderDTO order) {
         return ok(orderService.updateOrder(id, order));
     }
 
@@ -89,6 +88,17 @@ public class OrderController {
     public ResponseEntity<Void> deleteOrder(@PathVariable("id") Long id) {
         orderService.deleteOrder(id);
         return noContent().build();
+    }
+
+    /**
+     * Получение списка {@link OrderDTO}, относящихся к определенному заказчику.
+     *
+     * @param customerId идентификатор заказчика.
+     * @param pageable {@link Pageable}
+     */
+    @GetMapping(value = "/order/customer/{customerId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Page<OrderDTO>> getOrders(@PathVariable("customerId") Long customerId, Pageable pageable) {
+        return ok(orderService.getCustomerOrders(customerId, pageable));
     }
 
 }

@@ -1,0 +1,83 @@
+spring:
+  application.name: ap_gateway
+  datasource:
+    url: ${JDBC_URL}
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      connection-timeout: 60000
+      maximum-pool-size: 100
+    jpa:
+      database-platform: org.hibernate.dialect.PostgreSQLDialect
+      hibernate:
+        ddl-auto: validate
+      show-sql: true
+      properties:
+        hibernate:
+          temp:
+            use_jdbc_metadata_defaults: false
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+    cache:
+      type: redis
+    jackson:
+      serialization:
+        WRITE_DATES_AS_TIMESTAMPS: false
+  cloud:
+    consul:
+      host: ${CONSUL_HOST}
+      port: ${CONSUL_PORT}
+      discovery:
+        serviceName: ${spring.application.name}
+        hostname: ${HOSTNAME}
+        health-check-path: ${server.servlet.context-path}/actuator/health
+  #autoconfigure.exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration, org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+
+server:
+  port: 10000
+  servlet:
+    context-path: ''
+
+zuul:
+  ignored-services: '*'
+  host:
+    socket-timeout-millis: 30000
+    connect-timeout-millis: 30000
+
+  routes:
+    ap_customer:
+      path: /api/v1/customer/**
+      serviceId: ap-customer
+      stripPrefix: false
+      sensitiveHeaders: Cookie,Set-Cookie
+
+    ap_delivery_point:
+      path: /api/v1/delivery-point/**
+      serviceId: ap-delivery-point
+      stripPrefix: false
+      sensitiveHeaders: Cookie,Set-Cookie
+
+    ap_order:
+      path: /api/v1/order/**
+      serviceId: ap-order
+      stripPrefix: false
+      sensitiveHeaders: Cookie,Set-Cookie
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 30000
+
+ribbon:
+  ReadTimeout: 30000
+  ConnectTimeout: 30000
+
+security:
+  jwtSecret: 12345
+  jwtExpirationInMs: 28800000
