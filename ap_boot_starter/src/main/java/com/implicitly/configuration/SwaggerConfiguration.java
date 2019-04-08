@@ -1,3 +1,7 @@
+/*
+ * ©  Implicitly86 All Rights Reserved
+ */
+
 package com.implicitly.configuration;
 
 import lombok.val;
@@ -18,11 +22,13 @@ import java.util.Collections;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 /**
+ * Конфигурация <strong>Swagger</strong>.
+ *
  * @author Emil Murzakaev.
  */
 @Configuration
 @EnableSwagger2
-public class CommonConfiguration {
+public class SwaggerConfiguration {
 
     /**
      * Swagger бин для документации.

@@ -12,6 +12,7 @@ import com.implicitly.domain.customer.Customer;
 import com.implicitly.domain.customer.Customer_;
 import com.implicitly.dto.customer.CustomerDTO;
 import com.implicitly.dto.order.OrderDTO;
+import com.implicitly.exception.Error;
 import com.implicitly.utils.UserUtils;
 import com.implicitly.utils.mapper.customer.CustomerMapper;
 import lombok.RequiredArgsConstructor;
@@ -44,21 +45,14 @@ public class CustomerServiceImpl implements CustomerService {
      * {@link CustomerRepository}
      */
     private final CustomerRepository repository;
-
     /**
      * {@link OrderService}
      */
     private final OrderService orderService;
-
     /**
      * {@link CustomerMapper}
      */
     private final CustomerMapper mapper;
-
-    /**
-     * {@link OrderMapper}
-     */
-    //private final OrderMapper orderMapper;
 
     /**
      * Получение всех сущностей {@link CustomerDTO}.
@@ -81,7 +75,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Cacheable(value = Constants.CACHE_CUSTOMER, key = "#p0")
     public CustomerDTO getCustomer(Long id) {
-        Customer customer = repository.findById(id).orElseThrow(RuntimeException::new);
+        Customer customer = repository.findById(id).orElseThrow(Error.CUSTOMER_NOT_FOUND::exception);
         return mapper.toDto(customer);
     }
 
@@ -119,9 +113,7 @@ public class CustomerServiceImpl implements CustomerService {
             put = @CachePut(value = Constants.CACHE_CUSTOMER, key = "#result.id")
     )
     public CustomerDTO updateCustomer(Long id, CustomerDTO customer) {
-        if (!repository.existsById(id)) {
-            throw new RuntimeException();
-        }
+        Error.CUSTOMER_NOT_FOUND.throwIfFalse(repository.existsById(id));
         Customer entity = mapper.toEntity(customer);
         Customer result = repository.saveAndFlush(entity);
         return mapper.toDto(result);
@@ -140,9 +132,7 @@ public class CustomerServiceImpl implements CustomerService {
             }
     )
     public void deleteCustomer(Long id) {
-        if (!repository.existsById(id)) {
-            throw new RuntimeException();
-        }
+        Error.CUSTOMER_NOT_FOUND.throwIfFalse(repository.existsById(id));
         repository.deleteById(id);
     }
 
@@ -155,7 +145,7 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public Page<OrderDTO> getOrders(Long id, Pageable pageable) {
-        Customer customer = repository.findById(id).orElseThrow(RuntimeException::new);
+        Customer customer = repository.findById(id).orElseThrow(Error.CUSTOMER_NOT_FOUND::exception);
         return orderService.getOrders(customer.getId(), pageable).getBody();
     }
 

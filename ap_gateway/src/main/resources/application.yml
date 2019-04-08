@@ -34,6 +34,8 @@ spring:
         serviceName: ${spring.application.name}
         hostname: ${HOSTNAME}
         health-check-path: ${server.servlet.context-path}/actuator/health
+  main:
+    allow-bean-definition-overriding: true
   #autoconfigure.exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration, org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
 
 server:
@@ -48,6 +50,12 @@ zuul:
     connect-timeout-millis: 30000
 
   routes:
+    ap_auth:
+      path: /api/v1/auth/**
+      serviceId: ap-auth
+      stripPrefix: false
+      sensitiveHeaders: Cookie,Set-Cookie
+
     ap_customer:
       path: /api/v1/customer/**
       serviceId: ap-customer

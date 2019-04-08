@@ -21,7 +21,6 @@ import java.util.List;
  * Реализация {@link Encoder} для возможности использования {@link Pageable} в запросах {@link FeignClient}.
  *
  * @author Emil Murzakaev.
- *
  */
 public class FeignPageableEncoder implements Encoder {
 

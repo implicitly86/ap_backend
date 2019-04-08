@@ -19,14 +19,14 @@
     </appender>
 
     <appender name="FILE-AUDIT" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/log.log</file>
+        <file>../logs/ap_gateway_log.log</file>
         <append>false</append>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <Pattern>%d{HH:mm:ss.SSS dd.MM.yyyy} %-5level [%thread] [%logger{36}] : %msg%n</Pattern>
         </encoder>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/log_archived.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>../logs/ap_gateway_log_archived.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>15MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
@@ -34,7 +34,7 @@
     </appender>
 
     <appender name="FILE-ACCESS-AUDIT" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/access_log.log</file>
+        <file>../logs/ap_gateway_access_log.log</file>
         <append>false</append>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <Pattern>%d{HH:mm:ss.SSS dd.MM.yyyy} %-5level [%thread] [%logger{36}] : %msg%n</Pattern>
@@ -46,7 +46,7 @@
         </filter>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/access_log_archived.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>../logs/ap_gateway_access_log_archived.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>15MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
@@ -54,14 +54,14 @@
     </appender>
 
     <appender name="FILE-SQL" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/sql_log.log</file>
+        <file>../logs/ap_gateway_sql_log.log</file>
         <append>false</append>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <Pattern>%d{HH:mm:ss.SSS dd.MM.yyyy} %-5level [%thread] [%logger{36}] : %msg%n</Pattern>
         </encoder>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/sql_log_archived.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>../logs/ap_gateway_sql_log_archived.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>15MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>

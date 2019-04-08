@@ -1,5 +1,5 @@
 /*
- * ©  Сбербанк-Технологии All Rights Reserved.
+ * ©  Implicitly86 All Rights Reserved
  */
 
 package com.implicitly.configuration;
@@ -7,7 +7,7 @@ package com.implicitly.configuration;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.implicitly.security.OAuthFeignRequestInterceptor;
+import com.implicitly.security.SecurityFeignRequestInterceptor;
 import com.implicitly.utils.feign.FeignPageJacksonModule;
 import com.implicitly.utils.feign.FeignPageableEncoder;
 import feign.Feign;
@@ -32,7 +32,6 @@ import javax.annotation.PostConstruct;
  * Конфигурация {@link FeignClient}.
  *
  * @author Emil Murzakaev.
- *
  */
 @Slf4j
 @Configuration
@@ -47,7 +46,7 @@ public class FeignConfiguration {
     /**
      * Имя бина {@link #OAuthFeignRequestInterceptor}.
      */
-    private static final String FEIGN_REQUEST_INTERCEPTOR = "OAuthFeignRequestInterceptor";
+    private static final String FEIGN_REQUEST_INTERCEPTOR = "SecurityFeignRequestInterceptor";
 
     /**
      * Имя бина {@link #feignPageJacksonModule}.
@@ -83,11 +82,11 @@ public class FeignConfiguration {
     }
 
     /**
-     * {@link OAuthFeignRequestInterceptor}
+     * {@link SecurityFeignRequestInterceptor}
      */
     @Bean(name = FEIGN_REQUEST_INTERCEPTOR)
     public RequestInterceptor OAuthFeignRequestInterceptor() {
-        return new OAuthFeignRequestInterceptor();
+        return new SecurityFeignRequestInterceptor();
     }
 
     /**

@@ -9,6 +9,7 @@ import com.implicitly.domain.customer.Customer;
 import com.implicitly.domain.order.Order;
 import com.implicitly.dto.customer.CustomerDTO;
 import com.implicitly.dto.order.OrderDTO;
+import com.implicitly.exception.Error;
 import com.implicitly.order.persistence.OrderRepository;
 import com.implicitly.order.service.OrderService;
 import com.implicitly.utils.UserUtils;
@@ -64,7 +65,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Cacheable(value = Constants.CACHE_ORDER, key = "#p0")
     public OrderDTO getOrder(Long id) {
-        Order order = repository.findById(id).orElseThrow(RuntimeException::new);
+        Order order = repository.findById(id).orElseThrow(Error.ORDER_NOT_FOUND::exception);
         return mapper.toDto(order);
     }
 
@@ -106,9 +107,7 @@ public class OrderServiceImpl implements OrderService {
             put = @CachePut(value = Constants.CACHE_ORDER, key = "#result.id")
     )
     public OrderDTO updateOrder(Long id, OrderDTO order) {
-        if (!repository.existsById(id)) {
-            throw new RuntimeException();
-        }
+        Error.ORDER_NOT_FOUND.throwIfFalse(repository.existsById(id));
         Order entity = mapper.toEntity(order);
         entity.setModifiedDate(LocalDateTime.now());
         UserUtils.getCurrentUser().ifPresent(entity::setModifiedBy);
@@ -129,9 +128,7 @@ public class OrderServiceImpl implements OrderService {
             }
     )
     public void deleteOrder(Long id) {
-        if (!repository.existsById(id)) {
-            throw new RuntimeException();
-        }
+        Error.ORDER_NOT_FOUND.throwIfFalse(repository.existsById(id));
         repository.deleteById(id);
     }
 

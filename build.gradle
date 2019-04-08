@@ -67,7 +67,7 @@ subprojects {
         compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.7.0'
 
         /* Utility modules */
-        compileOnly 'org.projectlombok:lombok:1.18.6'
+        compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.6'
         annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.6'
         annotationProcessor group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
         annotationProcessor group: 'org.hibernate', name: 'hibernate-jpamodelgen', version: '5.3.9.Final'

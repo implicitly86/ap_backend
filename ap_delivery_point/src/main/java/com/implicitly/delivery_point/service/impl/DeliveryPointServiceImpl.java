@@ -10,6 +10,7 @@ import com.implicitly.delivery_point.service.DeliveryPointService;
 import com.implicitly.domain.deliverypoint.DeliveryPoint;
 import com.implicitly.domain.deliverypoint.DeliveryPoint_;
 import com.implicitly.dto.deliverypoint.DeliveryPointDTO;
+import com.implicitly.exception.Error;
 import com.implicitly.utils.mapper.deliverypoint.DeliveryPointMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -64,7 +65,7 @@ public class DeliveryPointServiceImpl implements DeliveryPointService {
     @Override
     @Cacheable(value = Constants.CACHE_DELIVERY_POINT, key = "#p0")
     public DeliveryPointDTO getDeliveryPoint(Long id) {
-        DeliveryPoint deliveryPoint = repository.findById(id).orElseThrow(RuntimeException::new);
+        DeliveryPoint deliveryPoint = repository.findById(id).orElseThrow(Error.DELIVERY_POINT_NOT_FOUND::exception);
         return mapper.toDto(deliveryPoint);
     }
 
@@ -99,9 +100,7 @@ public class DeliveryPointServiceImpl implements DeliveryPointService {
             put = @CachePut(value = Constants.CACHE_DELIVERY_POINT, key = "#result.id")
     )
     public DeliveryPointDTO updateDeliveryPoint(Long id, DeliveryPointDTO deliveryPoint) {
-        if (!repository.existsById(id)) {
-            throw new RuntimeException();
-        }
+        Error.DELIVERY_POINT_NOT_FOUND.throwIfFalse(repository.existsById(id));
         DeliveryPoint entity = mapper.toEntity(deliveryPoint);
         DeliveryPoint result = repository.saveAndFlush(entity);
         return mapper.toDto(result);
@@ -120,9 +119,7 @@ public class DeliveryPointServiceImpl implements DeliveryPointService {
             }
     )
     public void deleteDeliveryPoint(Long id) {
-        if (!repository.existsById(id)) {
-            throw new RuntimeException();
-        }
+        Error.DELIVERY_POINT_NOT_FOUND.throwIfFalse(repository.existsById(id));
         repository.deleteById(id);
     }
 

@@ -14,8 +14,6 @@ public class Constants {
     public static final String AUTHORIZATION = "Authorization";
     public static final String BEARER = "Bearer";
 
-    public static final String MESSAGE = "message";
-    public static final String BODY = "body";
     public static final String ENTITY_BASE_PACKAGE = "com.implicitly";
     public static final String REPOSITORY_BASE_PACKAGE = "com.implicitly";
 
