@@ -149,8 +149,12 @@ project(':ap_order') {
 }
 
 project(':ap_gateway') {
+    configurations {
+        compile.exclude module: "spring-boot-starter-security"
+        compile.exclude module: "spring-boot-starter-data-jpa"
+        compile.exclude module: "spring-boot-starter-data-redis"
+    }
     dependencies {
-        implementation project(':ap_boot_starter')
         implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-zuul'
     }
 }

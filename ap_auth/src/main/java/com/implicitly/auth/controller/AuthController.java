@@ -54,7 +54,7 @@ public class AuthController {
      *
      * @param credentials данные пользователя.
      */
-    @PostMapping("/login")
+    @PostMapping("/auth/login")
     public ResponseEntity<TokenDTO> authenticateUser(@Valid @RequestBody CredentialsDTO credentials) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(credentials.getUsername(), credentials.getPassword())

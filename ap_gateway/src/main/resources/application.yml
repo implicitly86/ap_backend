@@ -1,31 +1,5 @@
 spring:
   application.name: ap_gateway
-  datasource:
-    url: ${JDBC_URL}
-    driver-class-name: org.postgresql.Driver
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
-    type: com.zaxxer.hikari.HikariDataSource
-    hikari:
-      connection-timeout: 60000
-      maximum-pool-size: 100
-    jpa:
-      database-platform: org.hibernate.dialect.PostgreSQLDialect
-      hibernate:
-        ddl-auto: validate
-      show-sql: true
-      properties:
-        hibernate:
-          temp:
-            use_jdbc_metadata_defaults: false
-    redis:
-      host: ${REDIS_HOST}
-      port: ${REDIS_PORT}
-    cache:
-      type: redis
-    jackson:
-      serialization:
-        WRITE_DATES_AS_TIMESTAMPS: false
   cloud:
     consul:
       host: ${CONSUL_HOST}
@@ -36,7 +10,6 @@ spring:
         health-check-path: ${server.servlet.context-path}/actuator/health
   main:
     allow-bean-definition-overriding: true
-  #autoconfigure.exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration, org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
 
 server:
   port: 10000
@@ -85,7 +58,3 @@ hystrix:
 ribbon:
   ReadTimeout: 30000
   ConnectTimeout: 30000
-
-security:
-  jwtSecret: 12345
-  jwtExpirationInMs: 28800000

@@ -104,7 +104,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .antMatchers(HttpMethod.GET, "/")
                         .permitAll()
                     .antMatchers(
-                            "/login",
+                            "/auth/login",
                             "/actuator",
                             "/actuator/**",
                             "/**/api-docs",

@@ -112,8 +112,7 @@ public class FeignConfiguration {
          * {@inheritDoc}
          */
         @Override
-        public Exception decode(String methodKey,
-                                Response response) {
+        public Exception decode(String methodKey, Response response) {
             if (HttpStatus.BAD_REQUEST.value() == response.status()) {
                 /*
                 List<ValidationError> errors;
