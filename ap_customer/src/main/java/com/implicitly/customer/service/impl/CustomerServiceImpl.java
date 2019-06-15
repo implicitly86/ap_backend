@@ -63,7 +63,10 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Cacheable(value = Constants.CACHE_CUSTOMERS)
     public Page<CustomerDTO> getAllCustomers(Pageable pageable) {
-        return repository.findAll(pageable).map(mapper::toDto);
+        log.debug("invoke getAllCustomers({})", pageable);
+        Page<CustomerDTO> result = repository.findAll(pageable).map(mapper::toDto);
+        log.debug("result getAllCustomers({}) : {}", pageable, result);
+        return result;
     }
 
     /**
@@ -75,8 +78,11 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Cacheable(value = Constants.CACHE_CUSTOMER, key = "#p0")
     public CustomerDTO getCustomer(Long id) {
+        log.debug("invoke getCustomer({})", id);
         Customer customer = repository.findById(id).orElseThrow(Error.CUSTOMER_NOT_FOUND::exception);
-        return mapper.toDto(customer);
+        CustomerDTO result = mapper.toDto(customer);
+        log.debug("result getCustomer({}) : {}", id, result);
+        return result;
     }
 
     /**
