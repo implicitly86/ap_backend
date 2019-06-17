@@ -6,7 +6,6 @@ package com.implicitly.dto.security;
 
 import com.implicitly.dto.IdentifiedDTO;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * Модель передачи данных сущности <strong>Роль</strong>.
@@ -14,7 +13,6 @@ import lombok.EqualsAndHashCode;
  * @author Emil Murzakaev.
  */
 @Data
-@EqualsAndHashCode
 public class RoleDTO implements IdentifiedDTO {
 
     /**

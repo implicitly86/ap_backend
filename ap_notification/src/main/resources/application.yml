@@ -1,0 +1,60 @@
+spring:
+  application.name: ap_notification
+  datasource:
+    url: ${JDBC_URL}
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      connection-timeout: 60000
+      maximum-pool-size: 100
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        temp:
+          use_jdbc_metadata_defaults: false
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+  cache:
+    type: redis
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+  cloud:
+    consul:
+      host: ${CONSUL_HOST}
+      port: ${CONSUL_PORT}
+      discovery:
+        serviceName: ${spring.application.name}
+        hostname: ${HOSTNAME}
+        health-check-path: ${server.servlet.context-path}/actuator/health
+  main:
+    allow-bean-definition-overriding: true
+
+server:
+  port: 10050
+  servlet:
+    context-path: /api/v1
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+elk:
+  host: ${ELK_HOST}
+  port: ${ELK_PORT}
+
+security:
+  jwtSecret: 12345
+  jwtExpirationInMs: 28800000

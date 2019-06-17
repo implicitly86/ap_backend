@@ -10,7 +10,6 @@ import com.implicitly.dto.deliverypoint.DeliveryPointDTO;
 import com.implicitly.dto.security.UserDTO;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
 
@@ -21,7 +20,6 @@ import java.time.LocalDateTime;
  */
 @Data
 @Builder
-@EqualsAndHashCode
 public class OrderDTO implements IdentifiedDTO {
 
     /**

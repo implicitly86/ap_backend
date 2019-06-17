@@ -7,7 +7,6 @@ package com.implicitly.dto.deliverypoint;
 import com.implicitly.dto.IdentifiedDTO;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * Модель передачи данных сущности <strong>Пункт отправки/доставки</strong>.
@@ -16,7 +15,6 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @Builder
-@EqualsAndHashCode
 public class DeliveryPointDTO implements IdentifiedDTO {
 
     /**

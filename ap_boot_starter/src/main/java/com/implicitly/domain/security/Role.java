@@ -6,7 +6,6 @@ package com.implicitly.domain.security;
 
 import com.implicitly.domain.IdentifiedEntity;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,7 +21,6 @@ import javax.persistence.Table;
  * @author Emil Murzakaev.
  */
 @Data
-@EqualsAndHashCode
 @Entity
 @Table(name = "`role`")
 public class Role implements IdentifiedEntity {

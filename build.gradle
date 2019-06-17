@@ -145,6 +145,12 @@ project(':ap_order') {
     }
 }
 
+project(':ap_notification') {
+    dependencies {
+        implementation project(':ap_boot_starter')
+    }
+}
+
 project(':ap_gateway') {
     configurations {
         compile.exclude module: "spring-boot-starter-security"

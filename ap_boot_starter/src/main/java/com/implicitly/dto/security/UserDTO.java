@@ -6,7 +6,6 @@ package com.implicitly.dto.security;
 
 import com.implicitly.dto.IdentifiedDTO;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
@@ -16,7 +15,6 @@ import java.util.List;
  * @author Emil Murzakaev.
  */
 @Data
-@EqualsAndHashCode
 public class UserDTO implements IdentifiedDTO {
 
     /**

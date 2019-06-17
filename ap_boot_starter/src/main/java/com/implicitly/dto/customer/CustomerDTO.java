@@ -8,7 +8,6 @@ import com.implicitly.dto.IdentifiedDTO;
 import com.implicitly.dto.security.UserDTO;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
 
@@ -19,7 +18,6 @@ import java.time.LocalDateTime;
  */
 @Data
 @Builder
-@EqualsAndHashCode
 public class CustomerDTO implements IdentifiedDTO {
 
     /**
