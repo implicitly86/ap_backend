@@ -8,6 +8,7 @@ import com.implicitly.constants.Constants;
 import com.implicitly.customer.feign.OrderService;
 import com.implicitly.customer.persistence.CustomerRepository;
 import com.implicitly.customer.service.CustomerService;
+import com.implicitly.customer.validation.CustomerValidator;
 import com.implicitly.domain.customer.Customer;
 import com.implicitly.domain.customer.Customer_;
 import com.implicitly.dto.customer.CustomerDTO;
@@ -15,6 +16,8 @@ import com.implicitly.dto.order.OrderDTO;
 import com.implicitly.exception.Error;
 import com.implicitly.utils.UserUtils;
 import com.implicitly.utils.mapper.customer.CustomerMapper;
+import io.vavr.collection.Seq;
+import io.vavr.control.Validation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -40,6 +43,11 @@ import java.util.regex.Pattern;
 @Service
 @RequiredArgsConstructor
 public class CustomerServiceImpl implements CustomerService {
+
+    /**
+     * {@link CustomerValidator}
+     */
+    private static final CustomerValidator customerValidator = new CustomerValidator();
 
     /**
      * {@link CustomerRepository}
@@ -96,7 +104,13 @@ public class CustomerServiceImpl implements CustomerService {
             put = @CachePut(value = Constants.CACHE_CUSTOMER, key = "#result.id")
     )
     public CustomerDTO saveCustomer(CustomerDTO customer) {
-        Customer entity = mapper.toEntity(customer);
+        Validation<Seq<String>, CustomerDTO> validatedCustomer = customerValidator.validateCustomer(customer);
+        if (validatedCustomer.isInvalid()) {
+            Error error = Error.CUSTOMER_NOT_VALID;
+            error.addData(validatedCustomer.getError());
+            error.throwException();
+        }
+        Customer entity = mapper.toEntity(validatedCustomer.get());
         entity.setCreatedDate(LocalDateTime.now());
         UserUtils.getCurrentUser().ifPresent(entity::setAuthor);
         Customer result = repository.saveAndFlush(entity);

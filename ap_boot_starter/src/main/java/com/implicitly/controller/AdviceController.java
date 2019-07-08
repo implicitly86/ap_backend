@@ -93,7 +93,7 @@ public class AdviceController {
      * @return {@link ErrorResponse}.
      */
     private ErrorResponse process(Error error, Exception ex) {
-        return ErrorResponse.of(error.getCode(), error.getMessage(), ExceptionUtils.getStackTrace(ex));
+        return ErrorResponse.of(error.getCode(), error.getMessage(), error.getData().toJavaList(), ExceptionUtils.getStackTrace(ex));
     }
 
     /**
@@ -111,6 +111,10 @@ public class AdviceController {
          * Сообщение об ошибке.
          */
         private String message;
+        /**
+         * Дополнительные данные.
+         */
+        private List<String> data;
         /**
          * Стектрейс ошибки.
          */

@@ -70,7 +70,7 @@ public class CustomerServiceImplTest {
         Customer customer = new Customer();
         customer.setId(id);
         when(repository.findAll(any(Pageable.class)))
-                .thenReturn(new PageImpl(Collections.singletonList(customer)));
+                .thenReturn(new PageImpl<>(Collections.singletonList(customer)));
         Pageable pageable = PageRequest.of(0, 10);
         Page<CustomerDTO> customers = service.getAllCustomers(pageable);
 
