@@ -6,7 +6,6 @@ package com.implicitly.auth.controller;
 
 import com.implicitly.dto.security.CredentialsDTO;
 import com.implicitly.dto.security.TokenDTO;
-import com.implicitly.persistence.security.UserRepository;
 import com.implicitly.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +13,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,14 +34,6 @@ public class AuthController {
      * {@link AuthenticationManager}
      */
     private final AuthenticationManager authenticationManager;
-    /**
-     * {@link UserRepository}
-     */
-    private final UserRepository userRepository;
-    /**
-     * {@link PasswordEncoder}
-     */
-    private final PasswordEncoder passwordEncoder;
     /**
      * {@link JwtTokenProvider}
      */

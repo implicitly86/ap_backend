@@ -82,6 +82,7 @@ public class AdviceController {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     public List<ErrorResponse> handleException(Exception ex) {
+        log.error(ex.getMessage(), ex);
         return Collections.singletonList(process(Error.INTERNAL_ERROR, ex));
     }
 

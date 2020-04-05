@@ -36,6 +36,8 @@ spring:
         health-check-path: ${server.servlet.context-path}/actuator/health
   main:
     allow-bean-definition-overriding: true
+  liquibase:
+    change-log: classpath:db/master.xml
 
 server:
   port: 10010

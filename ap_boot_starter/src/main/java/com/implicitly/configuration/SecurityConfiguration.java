@@ -117,14 +117,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                             "/**/*.html",
                             "/**/*.css",
                             "/**/*.js"
-//                            ,
-//                            "/**/customer",
-//                            "/**/customer/**",
-//                            "/**/delivery-point",
-//                            "/**/delivery-point/**",
-//                            "/**/order",
-//                            "/**/order/**"
-
                     )
                         .permitAll()
                     /*

@@ -4,18 +4,14 @@
 
 package com.implicitly.dto.security;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 /**
  * Данные пользователя.
  *
  * @author Emil Murzakaev.
  */
-@Getter
-@Setter
-@Builder
+@Data
 public class CredentialsDTO {
 
     /**

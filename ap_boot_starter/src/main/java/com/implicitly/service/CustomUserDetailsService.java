@@ -8,6 +8,7 @@ import com.implicitly.constants.Constants;
 import com.implicitly.domain.security.User;
 import com.implicitly.persistence.security.UserRepository;
 import com.implicitly.security.UserPrincipal;
+import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,21 +22,13 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Emil Murzakaev.
  */
 @Service
+@RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
     /**
      * {@link UserRepository}
      */
     private final UserRepository userRepository;
-
-    /**
-     * Конструктор.
-     *
-     * @param userRepository {@link UserRepository}
-     */
-    public CustomUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     /**
      * Поиск {@link UserDetails} по имени.
@@ -47,11 +40,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Cacheable(value = Constants.CACHE_USER_BY_NAME, key = "#username")
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByName(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("UserDTO not found with username or email : " + username);
-        }
-        return UserPrincipal.create(user);
+        User user = userRepository.findByName(username).orElseThrow(() ->
+                new UsernameNotFoundException("UserDTO not found with username or email : " + username)
+        );
+        return UserPrincipal.of(user);
     }
 
     /**
@@ -66,7 +58,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findById(id).orElseThrow(() ->
                 new UsernameNotFoundException("UserDTO not found with id : " + id)
         );
-        return UserPrincipal.create(user);
+        return UserPrincipal.of(user);
     }
 
 }

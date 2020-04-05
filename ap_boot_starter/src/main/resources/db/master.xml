@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet author="implicitly" id="create-entities">
+        <sqlFile encoding="utf8" path="db/sql/20180716-create-entities-utf8.sql" splitStatements="true"/>
+    </changeSet>
+
+    <changeSet author="implicitly" id="change-entities">
+        <sqlFile encoding="utf8" path="db/sql/20180717-change-entities-utf8.sql" splitStatements="true"/>
+    </changeSet>
+
+    <changeSet author="implicitly" id="create-customer">
+        <sqlFile encoding="utf8" path="db/sql/20180731-create-customer-utf8.sql" splitStatements="true"/>
+    </changeSet>
+
+    <changeSet author="implicitly" id="change-customer-type">
+        <sqlFile encoding="utf8" path="db/sql/20180820-change-customer-type-utf8.sql" splitStatements="true"/>
+    </changeSet>
+
+    <changeSet author="implicitly" id="change-date-type">
+        <sqlFile encoding="utf8" path="db/sql/20180822-change-date-type-utf8.sql" splitStatements="true"/>
+    </changeSet>
+
+    <changeSet author="implicitly" id="test-data">
+        <sqlFile encoding="utf8" path="db/sql/20180830-test-data-utf8.sql" splitStatements="true"/>
+    </changeSet>
+
+    <changeSet author="implicitly" id="create-notification">
+        <sqlFile encoding="utf8" path="db/sql/20190623-create-notification-utf8.sql" splitStatements="true"/>
+    </changeSet>
+
+</databaseChangeLog>

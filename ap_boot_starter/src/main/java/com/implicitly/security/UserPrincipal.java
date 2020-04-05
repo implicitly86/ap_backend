@@ -55,7 +55,7 @@ public class UserPrincipal implements UserDetails {
      * @param user пользоватеь.
      * @return принципал пользователя.
      */
-    public static UserPrincipal create(User user) {
+    public static UserPrincipal of(User user) {
         return new UserPrincipal(user.getId(), user.getName(), user.getPassword(), user.getRoles());
     }
 

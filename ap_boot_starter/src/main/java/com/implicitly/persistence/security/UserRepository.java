@@ -8,6 +8,8 @@ import com.implicitly.domain.security.User;
 import com.implicitly.persistence.BaseRepository;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 /**
  * Репозиторий сущности {@link User}.
  *
@@ -19,6 +21,6 @@ public interface UserRepository extends BaseRepository<User, Long> {
     /**
      * Поиск пользователя по имени.
      */
-    User findByName(String userName);
+    Optional<User> findByName(String userName);
 
 }

@@ -8,7 +8,6 @@ import com.implicitly.constants.Constants;
 import com.implicitly.delivery_point.persistence.DeliveryPointRepository;
 import com.implicitly.delivery_point.service.DeliveryPointService;
 import com.implicitly.domain.deliverypoint.DeliveryPoint;
-import com.implicitly.domain.deliverypoint.DeliveryPoint_;
 import com.implicitly.dto.deliverypoint.DeliveryPointDTO;
 import com.implicitly.exception.Error;
 import com.implicitly.utils.mapper.deliverypoint.DeliveryPointMapper;
@@ -22,7 +21,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+
+//import com.implicitly.domain.deliverypoint.DeliveryPoint_;
 
 /**
  * Реализация сервиса работы с сущностью {@link DeliveryPointDTO}
@@ -133,6 +133,7 @@ public class DeliveryPointServiceImpl implements DeliveryPointService {
     @Override
     public Page<DeliveryPointDTO> search(DeliveryPointDTO searchFilter, Pageable pageable) {
         Specifications<DeliveryPoint> specifications = Specifications.where(null);
+        /*
         if (searchFilter.getId() != null) {
             specifications = specifications.and((root, query, cb) ->
                     cb.equal(root.get(DeliveryPoint_.id), searchFilter.getId())
@@ -143,6 +144,7 @@ public class DeliveryPointServiceImpl implements DeliveryPointService {
                     cb.like(cb.lower(root.get(DeliveryPoint_.name)), "%" + searchFilter.getName().toLowerCase() + "%")
             );
         }
+        */
         return repository.findAll(specifications, pageable).map(mapper::toDto);
     }
 
