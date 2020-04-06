@@ -1,0 +1,31 @@
+spring:
+  profiles:
+    active: dev,native
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: file://${PWD}/ap_config/config/{application}
+    consul:
+      host: ${CONSUL_HOST}
+      port: ${CONSUL_PORT}
+      discovery:
+        serviceName: ${spring.application.name}
+        hostname: ${HOSTNAME}
+        health-check-path: ${server.servlet.context-path}/actuator/health
+  application:
+    name: ap_config
+
+server:
+  port: 8888
+  servlet:
+    context-path: /api/v1
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always

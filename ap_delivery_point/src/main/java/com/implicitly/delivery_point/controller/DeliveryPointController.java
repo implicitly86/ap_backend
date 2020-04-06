@@ -9,7 +9,6 @@ import com.implicitly.dto.deliverypoint.DeliveryPointDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,7 +41,7 @@ public class DeliveryPointController {
      * @param pageable {@link Pageable}
      * @return список {@link DeliveryPointDTO}
      */
-    @GetMapping(value = "/delivery-point", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "/delivery-point")
     public ResponseEntity<Page<DeliveryPointDTO>> getAllDeliveryPoints(Pageable pageable) {
         return ok(deliveryPointService.getAllDeliveryPoints(pageable));
     }
@@ -53,7 +52,7 @@ public class DeliveryPointController {
      * @param id уникальный идентификатор.
      * @return {@link DeliveryPointDTO}.
      */
-    @GetMapping(value = "/delivery-point/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "/delivery-point/{id}")
     public ResponseEntity<DeliveryPointDTO> getDeliveryPoint(@PathVariable("id") Long id) {
         return ok(deliveryPointService.getDeliveryPoint(id));
     }
@@ -63,7 +62,7 @@ public class DeliveryPointController {
      *
      * @param deliveryPoint {@link DeliveryPointDTO}.
      */
-    @PostMapping(value = "/delivery-point", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = "/delivery-point")
     public ResponseEntity<DeliveryPointDTO> saveDeliveryPoint(@RequestBody DeliveryPointDTO deliveryPoint) {
         return ok(deliveryPointService.saveDeliveryPoint(deliveryPoint));
     }
@@ -74,7 +73,7 @@ public class DeliveryPointController {
      * @param id            уникальный идентификатор.
      * @param deliveryPoint {@link DeliveryPointDTO}.
      */
-    @PutMapping(value = "/delivery-point/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PutMapping(value = "/delivery-point/{id}")
     public ResponseEntity<DeliveryPointDTO> updateDeliveryPoint(
             @PathVariable("id") Long id, @RequestBody DeliveryPointDTO deliveryPoint) {
         return ok(deliveryPointService.updateDeliveryPoint(id, deliveryPoint));
@@ -98,7 +97,7 @@ public class DeliveryPointController {
      * @param pageable     {@link Pageable}.
      * @return {@link Page<DeliveryPointDTO>}.
      */
-    @PostMapping(value = "/delivery-point/search", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = "/delivery-point/search")
     public ResponseEntity<Page<DeliveryPointDTO>> search(@RequestBody DeliveryPointDTO searchFilter, Pageable pageable) {
         return ok(deliveryPointService.search(searchFilter, pageable));
     }

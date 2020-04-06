@@ -37,7 +37,7 @@ public class FeignPageImpl<T> implements Page<T> {
                          @JsonProperty("totalElements") long totalElements) {
         delegate = new PageImpl<>(
                 content,
-                new PageRequest(number, size),
+                PageRequest.of(number, size),
                 totalElements)
         ;
     }

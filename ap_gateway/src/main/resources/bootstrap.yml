@@ -1,0 +1,15 @@
+spring:
+  application.name: ap_gateway
+  cloud:
+    consul:
+      host: ${CONSUL_HOST}
+      port: ${CONSUL_PORT}
+      discovery:
+        serviceName: ${spring.application.name}
+        hostname: ${HOSTNAME}
+        health-check-path: ${server.servlet.context-path}/actuator/health
+    config:
+      uri: http://localhost:8888/api/v1
+      name: ${spring.application.name}
+  main:
+    allow-bean-definition-overriding: true

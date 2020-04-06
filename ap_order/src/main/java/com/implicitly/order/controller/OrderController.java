@@ -9,7 +9,6 @@ import com.implicitly.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,12 +36,12 @@ public class OrderController {
     private final OrderService orderService;
 
     /**
-     * Получение всех сущностей {@link com.implicitly.dto.order.OrderDTO}.
+     * Получение всех сущностей {@link OrderDTO}.
      *
      * @param pageable {@link Pageable}
      * @return список {@link com.implicitly.dto.order.OrderDTO}
      */
-    @GetMapping(value = "/order", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "/order")
     public ResponseEntity<Page<OrderDTO>> getAllOrders(Pageable pageable) {
         return ok(orderService.getAllOrders(pageable));
     }
@@ -53,7 +52,7 @@ public class OrderController {
      * @param id уникальный идентификатор.
      * @return {@link OrderDTO}.
      */
-    @GetMapping(value = "/order/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "/order/{id}")
     public ResponseEntity<OrderDTO> getOrder(@PathVariable("id") Long id) {
         return ok(orderService.getOrder(id));
     }
@@ -63,7 +62,7 @@ public class OrderController {
      *
      * @param order {@link OrderDTO}.
      */
-    @PostMapping(value = "/order", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = "/order")
     public ResponseEntity<OrderDTO> saveOrder(@RequestBody OrderDTO order) {
         return ok(orderService.saveOrder(order));
     }
@@ -74,7 +73,7 @@ public class OrderController {
      * @param id    уникальный идентификатор.
      * @param order {@link OrderDTO}.
      */
-    @PutMapping(value = "/order/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PutMapping(value = "/order/{id}")
     public ResponseEntity<OrderDTO> updateOrder(@PathVariable("id") Long id, @RequestBody OrderDTO order) {
         return ok(orderService.updateOrder(id, order));
     }
@@ -96,7 +95,7 @@ public class OrderController {
      * @param customerId идентификатор заказчика.
      * @param pageable {@link Pageable}
      */
-    @GetMapping(value = "/order/customer/{customerId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "/order/customer/{customerId}")
     public ResponseEntity<Page<OrderDTO>> getOrders(@PathVariable("customerId") Long customerId, Pageable pageable) {
         return ok(orderService.getCustomerOrders(customerId, pageable));
     }

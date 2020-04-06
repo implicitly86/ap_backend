@@ -26,7 +26,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -178,7 +178,7 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     public Page<CustomerDTO> search(CustomerDTO searchFilter, Pageable pageable) {
-        Specifications<Customer> specifications = Specifications.where(null);
+        Specification<Customer> specifications = Specification.where(null);
         if (searchFilter.getId() != null) {
             specifications = specifications.and((root, query, cb) ->
                     cb.equal(root.get(Customer_.id), searchFilter.getId())
@@ -187,9 +187,9 @@ public class CustomerServiceImpl implements CustomerService {
         if (!StringUtils.isEmpty(searchFilter.getName())) {
             Pattern pattern = Pattern.compile("([\\wА-я]+)?( ([\\wА-я]+))?( ([\\wА-я]+))?$");
             Matcher matcher = pattern.matcher(searchFilter.getName());
-            Specifications<Customer> specification = null;
+            Specification<Customer> specification = null;
             if (matcher.find()) {
-                specification = Specifications.where(null);
+                specification = Specification.where(null);
                 if (!StringUtils.isEmpty(matcher.group(1))) {
                     specification = specification.and((root, query, cb) ->
                             cb.like(cb.lower(root.get(Customer_.lastName)), "%" + matcher.group(1).toLowerCase() + "%")
@@ -206,7 +206,7 @@ public class CustomerServiceImpl implements CustomerService {
                     );
                 }
             }
-            Specifications<Customer> nameSpecification = Specifications.where((root, query, cb) ->
+            Specification<Customer> nameSpecification = Specification.where((root, query, cb) ->
                     cb.like(cb.lower(root.get(Customer_.name)), "%" + searchFilter.getName().toLowerCase() + "%")
             );
             if (specification != null) {

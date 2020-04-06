@@ -1,5 +1,5 @@
 spring:
-  application.name: ap_notification
+  application.name: ap_auth
   datasource:
     url: ${JDBC_URL}
     driver-class-name: org.postgresql.Driver
@@ -27,6 +27,10 @@ spring:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
   cloud:
+    config:
+      allow-override: true
+      override-none: true
+      override-system-properties: false
     consul:
       host: ${CONSUL_HOST}
       port: ${CONSUL_PORT}
@@ -36,9 +40,11 @@ spring:
         health-check-path: ${server.servlet.context-path}/actuator/health
   main:
     allow-bean-definition-overriding: true
+  liquibase:
+    change-log: classpath:db/master.xml
 
 server:
-  port: 10050
+  port: 10040
   servlet:
     context-path: /api/v1
 
