@@ -6,8 +6,7 @@ package com.implicitly.controller;
 
 import com.implicitly.exception.Error;
 import com.implicitly.exception.ErrorException;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import com.implicitly.exception.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpStatus;
@@ -95,32 +94,6 @@ public class AdviceController {
      */
     private ErrorResponse process(Error error, Exception ex) {
         return ErrorResponse.of(error.getCode(), error.getMessage(), error.getData().toJavaList(), ExceptionUtils.getStackTrace(ex));
-    }
-
-    /**
-     * Модель, содержащая информацию об ошибке.
-     */
-    @Data
-    @AllArgsConstructor(staticName = "of")
-    private static class ErrorResponse {
-
-        /**
-         * Код ошибки.
-         */
-        private String code;
-        /**
-         * Сообщение об ошибке.
-         */
-        private String message;
-        /**
-         * Дополнительные данные.
-         */
-        private List<String> data;
-        /**
-         * Стектрейс ошибки.
-         */
-        private String cause;
-
     }
 
 }

@@ -4,7 +4,6 @@ import com.implicitly.dto.order.OrderDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +22,7 @@ public interface OrderService {
      * @param customerId идентификатор заказчика.
      * @param pageable   {@link Pageable}
      */
-    @GetMapping(value = "/order/customer/{customerId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "/order/customer/{customerId}")
     ResponseEntity<Page<OrderDTO>> getOrders(@PathVariable("customerId") Long customerId, Pageable pageable);
 
 }
