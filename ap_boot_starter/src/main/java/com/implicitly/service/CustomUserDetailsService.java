@@ -14,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Реализация {@link UserDetailsService}.
@@ -38,7 +37,6 @@ public class CustomUserDetailsService implements UserDetailsService {
      */
     @Override
     @Cacheable(value = Constants.CACHE_USER_BY_NAME, key = "#username")
-    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByName(username).orElseThrow(() ->
                 new UsernameNotFoundException("UserDTO not found with username or email : " + username)
@@ -53,7 +51,6 @@ public class CustomUserDetailsService implements UserDetailsService {
      * @return {@link UserDetails}
      */
     @Cacheable(value = Constants.CACHE_USER_BY_ID, key = "#id")
-    @Transactional
     public UserDetails loadUserById(Long id) {
         User user = userRepository.findById(id).orElseThrow(() ->
                 new UsernameNotFoundException("UserDTO not found with id : " + id)

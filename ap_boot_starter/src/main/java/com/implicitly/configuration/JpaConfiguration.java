@@ -52,12 +52,6 @@ public class JpaConfiguration {
      * {@link DataSourceProperties}.
      */
     private final DataSourceProperties dataSourceProperties;
-
-    /**
-     * {@link JpaProperties}
-     */
-    private final JpaProperties jpaProperties;
-
     /**
      * {@link RedisProperties}
      */

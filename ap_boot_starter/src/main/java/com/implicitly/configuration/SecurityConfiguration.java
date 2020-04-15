@@ -4,15 +4,18 @@
 
 package com.implicitly.configuration;
 
-import com.implicitly.security.JwtAuthenticationEntryPoint;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.implicitly.exception.Error;
+import com.implicitly.exception.ErrorResponse;
 import com.implicitly.security.JwtAuthenticationFilter;
 import com.implicitly.service.CustomUserDetailsService;
-import com.implicitly.utils.filter.CustomCorsFilter;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -23,9 +26,17 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Конфигурация безопасности приложения.
@@ -52,11 +63,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
      * {@link CustomUserDetailsService}
      */
     private final CustomUserDetailsService userDetailsService;
-
     /**
-     * {@link JwtAuthenticationEntryPoint}
+     * {@link JacksonConfiguration#objectMapper()}
      */
-    private final JwtAuthenticationEntryPoint unauthorizedHandler;
+    private final ObjectMapper objectMapper;
 
     /**
      * {@link PostConstruct}
@@ -89,45 +99,68 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         // formatter: off
         http
                 .cors()
-                    .and()
+                .configurationSource(corsConfigurationSource())
+                .and()
                 .csrf()
-                    .disable()
+                .disable()
                 .exceptionHandling()
-                    .authenticationEntryPoint(unauthorizedHandler)
-                    .and()
+                .accessDeniedHandler(accessDeniedHandler())
+                .authenticationEntryPoint(authenticationEntryPoint())
+                .and()
                 .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                    .and()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
                 .authorizeRequests()
-                    .antMatchers(HttpMethod.OPTIONS, "/**")
-                        .permitAll()
-                    .antMatchers(HttpMethod.GET, "/")
-                        .permitAll()
-                    .antMatchers(
-                            "/auth/login",
-                            "/actuator",
-                            "/actuator/**",
-                            "/**/api-docs",
-                            "/swagger**",
-                            "/swagger-resources/**",
-                            "/**/*.png",
-                            "/**/*.gif",
-                            "/**/*.svg",
-                            "/**/*.jpg",
-                            "/**/*.html",
-                            "/**/*.css",
-                            "/**/*.js"
-                    )
-                        .permitAll()
-                    /*
-                    .antMatchers("/admin/**")
-                        .hasAuthority("admin")
-                    */
-                    .anyRequest()
-                        .authenticated();
+                .antMatchers(HttpMethod.OPTIONS, "/**")
+                .permitAll()
+                .antMatchers(HttpMethod.GET, "/")
+                .permitAll()
+                .antMatchers(unsecuredEndpoints())
+                .permitAll()
+                .anyRequest()
+                .authenticated();
         // formatter: on
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-        http.addFilterBefore(new CustomCorsFilter(), JwtAuthenticationFilter.class);
+    }
+
+    /**
+     * Эндпоинты, доступные без аутентификации.
+     *
+     * @return масиив эндпоинтов.
+     */
+    private String[] unsecuredEndpoints() {
+        return new String[]{
+                "/auth/login",
+                "/actuator",
+                "/actuator/**",
+                "/**/api-docs",
+                "/swagger**",
+                "/swagger-resources/**",
+                "/**/*.png",
+                "/**/*.gif",
+                "/**/*.svg",
+                "/**/*.jpg",
+                "/**/*.html",
+                "/**/*.css",
+                "/**/*.js"
+        };
+    }
+
+    /**
+     * Конфигурация CORS.
+     *
+     * @return {@link CorsConfigurationSource}
+     */
+    private CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.setAllowedOrigins(Collections.singletonList("*"));
+        corsConfiguration.setAllowedHeaders(List.of("x-requested-with", "content-type", "authorization"));
+        corsConfiguration.setAllowedMethods(List.of("POST", "GET", "PUT", "OPTIONS", "DELETE"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.setAlwaysUseFullPath(true);
+        source.registerCorsConfiguration("/**", corsConfiguration);
+        return source;
     }
 
     /**
@@ -153,6 +186,34 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
         return new JwtAuthenticationFilter();
+    }
+
+    /**
+     * {@link AccessDeniedHandler}
+     */
+    public AccessDeniedHandler accessDeniedHandler() {
+        return (request, response, accessDeniedException) -> {
+            ErrorResponse errorResponse = ErrorResponse.of(Error.UNAUTHORIZED.getCode(), Error.UNAUTHORIZED.getMessage());
+            writeErrorResponse(response, HttpServletResponse.SC_FORBIDDEN, errorResponse);
+        };
+    }
+
+    /**
+     * {@link AuthenticationEntryPoint}
+     */
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return (request, response, authException) -> {
+            log.info("unauthorized request : {} {}", request.getMethod(), request.getRequestURL());
+            ErrorResponse errorResponse = ErrorResponse.of(Error.UNAUTHORIZED.getCode(), Error.UNAUTHORIZED.getMessage());
+            writeErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, errorResponse);
+        };
+    }
+
+    @SneakyThrows
+    private void writeErrorResponse(HttpServletResponse response, int statusCode, ErrorResponse error) {
+        response.setStatus(statusCode);
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        objectMapper.writeValue(response.getOutputStream(), error);
     }
 
 }

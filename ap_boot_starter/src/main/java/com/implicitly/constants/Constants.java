@@ -26,8 +26,6 @@ public class Constants {
     public static final String CACHE_USER_BY_ID = "get-user-by-id";
     public static final String CACHE_USER_BY_NAME = "get-user-by-name";
 
-    public static final String JPA_ENABLED = "ap.jpa_enabled";
-
     private Constants() {
     }
 

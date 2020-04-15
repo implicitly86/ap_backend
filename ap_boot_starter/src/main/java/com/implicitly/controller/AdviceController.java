@@ -44,16 +44,16 @@ public class AdviceController {
     public List<ErrorResponse> handleAuthException(AuthenticationException ex) {
         ErrorResponse errorResponse = null;
         if (ex instanceof UsernameNotFoundException) {
-            errorResponse = process(Error.USER_NOT_FOUND, ex);
+            errorResponse = process(Error.USER_NOT_FOUND);
         }
         if (ex instanceof BadCredentialsException) {
-            errorResponse = process(Error.INCORRECT_CREDENTIALS, ex);
+            errorResponse = process(Error.INCORRECT_CREDENTIALS);
         }
         if (ex instanceof LockedException) {
-            errorResponse = process(Error.USER_IS_BLOCKED, ex);
+            errorResponse = process(Error.USER_IS_BLOCKED);
         }
         if (errorResponse == null) {
-            errorResponse = process(Error.AUTHENTICATION_FAILURE, ex);
+            errorResponse = process(Error.AUTHENTICATION_FAILURE);
         }
         return Collections.singletonList(errorResponse);
     }
@@ -68,7 +68,7 @@ public class AdviceController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public List<ErrorResponse> handleException(ErrorException ex) {
-        return ex.getErrors().stream().map(it -> process(it, ex)).collect(Collectors.toList());
+        return ex.getErrors().stream().map(this::process).collect(Collectors.toList());
     }
 
     /**
@@ -83,6 +83,16 @@ public class AdviceController {
     public List<ErrorResponse> handleException(Exception ex) {
         log.error(ex.getMessage(), ex);
         return Collections.singletonList(process(Error.INTERNAL_ERROR, ex));
+    }
+
+    /**
+     * Генерация сообщения об ошибке.
+     *
+     * @param error {@link Error}.
+     * @return {@link ErrorResponse}.
+     */
+    private ErrorResponse process(Error error) {
+        return ErrorResponse.of(error.getCode(), error.getMessage(), error.getData().toJavaList(), null);
     }
 
     /**

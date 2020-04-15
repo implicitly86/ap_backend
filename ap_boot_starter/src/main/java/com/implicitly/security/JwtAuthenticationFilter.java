@@ -6,13 +6,13 @@ package com.implicitly.security;
 
 import com.implicitly.constants.Constants;
 import com.implicitly.service.CustomUserDetailsService;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -30,34 +30,17 @@ import java.io.IOException;
  * @author Emil Murzakaev.
  */
 @Slf4j
-@Component
+@Setter(onMethod_ = @Autowired)
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     /**
      * {@link JwtTokenProvider}
      */
     private JwtTokenProvider tokenProvider;
-
     /**
      * {@link CustomUserDetailsService}
      */
     private CustomUserDetailsService userDetailsService;
-
-    /**
-     * Внедрение зависимости {@link JwtAuthenticationFilter#tokenProvider}
-     */
-    @Autowired
-    public void setTokenProvider(JwtTokenProvider tokenProvider) {
-        this.tokenProvider = tokenProvider;
-    }
-
-    /**
-     * Внедрение зависимости {@link JwtAuthenticationFilter#userDetailsService}
-     */
-    @Autowired
-    public void setUserDetailsService(CustomUserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
 
     /**
      * {@link OncePerRequestFilter#doFilter(ServletRequest, ServletResponse, FilterChain)}

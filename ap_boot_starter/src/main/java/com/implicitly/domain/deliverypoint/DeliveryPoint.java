@@ -8,7 +8,9 @@ import com.implicitly.domain.IdentifiedEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,8 +27,10 @@ import javax.persistence.Table;
  */
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@ToString(of = "id")
+@EqualsAndHashCode(of = "id")
 @Entity
 @Table(name = "`deliverypoint`")
 public class DeliveryPoint implements IdentifiedEntity {
@@ -40,8 +44,8 @@ public class DeliveryPoint implements IdentifiedEntity {
      * Уникальный идентификатор.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "deliverypoint_gen")
-    @SequenceGenerator(name = "deliverypoint_gen", sequenceName = "sq_deliverypoint", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence")
+    @SequenceGenerator(name = "sequence", sequenceName = "sq_deliverypoint", allocationSize = 1)
     @Column(name = "id", nullable = false, unique = true)
     private Long id;
 

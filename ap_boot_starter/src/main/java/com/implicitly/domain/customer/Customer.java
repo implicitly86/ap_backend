@@ -12,7 +12,9 @@ import com.implicitly.utils.converter.LocalDateTimeConverter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -34,8 +36,10 @@ import java.time.LocalDateTime;
  */
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@ToString(of = "id")
+@EqualsAndHashCode(of = "id")
 @Entity
 @Table(name = "`customer`")
 public class Customer implements IdentifiedEntity {
@@ -49,8 +53,8 @@ public class Customer implements IdentifiedEntity {
      * Уникальный идентификатор.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customer_gen")
-    @SequenceGenerator(name = "customer_gen", sequenceName = "sq_customer", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence")
+    @SequenceGenerator(name = "sequence", sequenceName = "sq_customer", allocationSize = 1)
     @Column(name = "id", nullable = false, unique = true)
     private Long id;
 

@@ -3,6 +3,7 @@ package com.implicitly.exception;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -28,5 +29,9 @@ public class ErrorResponse {
      * Стектрейс ошибки.
      */
     private String cause;
+
+    public static ErrorResponse of(String code, String message) {
+        return of(code, message, Collections.emptyList(), null);
+    }
 
 }

@@ -6,6 +6,8 @@ package com.implicitly.domain.security;
 
 import com.implicitly.domain.IdentifiedEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,6 +24,8 @@ import javax.persistence.Table;
  */
 @Data
 @Entity
+@ToString(of = "id")
+@EqualsAndHashCode(of = "id")
 @Table(name = "`role`")
 public class Role implements IdentifiedEntity {
 
@@ -34,8 +38,8 @@ public class Role implements IdentifiedEntity {
      * Уникальный идентификатор.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_gen")
-    @SequenceGenerator(name = "role_gen", sequenceName = "sq_role", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence")
+    @SequenceGenerator(name = "sequence", sequenceName = "sq_role", allocationSize = 1)
     @Column(name = "id", nullable = false, unique = true)
     private Long id;
 

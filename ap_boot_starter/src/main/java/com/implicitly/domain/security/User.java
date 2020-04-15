@@ -8,7 +8,9 @@ import com.implicitly.domain.IdentifiedEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -35,6 +37,8 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(of = "id")
+@EqualsAndHashCode(of = "id")
 @Entity
 @Table(name = "`user`")
 public class User implements IdentifiedEntity {
@@ -48,8 +52,8 @@ public class User implements IdentifiedEntity {
      * Уникальный идентификатор пользователя.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_gen")
-    @SequenceGenerator(name = "user_gen", sequenceName = "sq_user", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence")
+    @SequenceGenerator(name = "sequence", sequenceName = "sq_user", allocationSize = 1)
     @Column(name = "id", nullable = false, unique = true)
     private Long id;
 
@@ -68,21 +72,12 @@ public class User implements IdentifiedEntity {
     /**
      * Набор ролей пользователя.
      */
-    @ManyToMany(
-            cascade = {CascadeType.ALL},
-            fetch = FetchType.EAGER
-    )
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Fetch(FetchMode.SUBSELECT)
     @JoinTable(
             name = "user_role",
-            joinColumns = @JoinColumn(
-                    name = "user_id",
-                    referencedColumnName = "id"
-            ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "role_id",
-                    referencedColumnName = "id"
-            )
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
     )
     private List<Role> roles;
 
