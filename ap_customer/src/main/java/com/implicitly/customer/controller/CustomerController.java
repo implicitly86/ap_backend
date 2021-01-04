@@ -42,7 +42,7 @@ public class CustomerController {
      *
      * @return список {@link CustomerDTO}
      */
-    @GetMapping(value = "/customer", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "/customer", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<CustomerDTO>> getAllCustomers(Pageable pageable) {
         return ok(customerService.getAllCustomers(pageable));
     }
@@ -53,7 +53,7 @@ public class CustomerController {
      * @param id уникальный идентификатор.
      * @return {@link CustomerDTO}.
      */
-    @GetMapping(value = "/customer/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "/customer/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CustomerDTO> getCustomer(@PathVariable("id") Long id) {
         return ok(customerService.getCustomer(id));
     }
@@ -63,7 +63,7 @@ public class CustomerController {
      *
      * @param customer {@link CustomerDTO}.
      */
-    @PostMapping(value = "/customer", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = "/customer", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CustomerDTO> saveCustomer(@RequestBody CustomerDTO customer) {
         return ok(customerService.saveCustomer(customer));
     }
@@ -74,7 +74,7 @@ public class CustomerController {
      * @param id       уникальный идентификатор.
      * @param customer {@link CustomerDTO}.
      */
-    @PutMapping(value = "/customer/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PutMapping(value = "/customer/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CustomerDTO> updateCustomer(
             @PathVariable("id") Long id, @RequestBody CustomerDTO customer) {
         return ok(customerService.updateCustomer(id, customer));
@@ -98,7 +98,7 @@ public class CustomerController {
      * @param pageable {@link Pageable}.
      * @return {@link Page<OrderDTO>}.
      */
-    @GetMapping(value = "/customer/{id}/orders", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "/customer/{id}/orders", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<OrderDTO>> getOrders(@PathVariable("id") Long id, Pageable pageable) {
         return ok(customerService.getOrders(id, pageable));
     }
@@ -110,7 +110,7 @@ public class CustomerController {
      * @param pageable     {@link Pageable}.
      * @return {@link Page<CustomerDTO>}.
      */
-    @PostMapping(value = "/customer/search", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = "/customer/search", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<CustomerDTO>> search(@RequestBody CustomerDTO searchFilter, Pageable pageable) {
         return ok(customerService.search(searchFilter, pageable));
     }
