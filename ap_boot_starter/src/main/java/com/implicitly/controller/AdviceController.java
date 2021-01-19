@@ -19,10 +19,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
 /**
  * {@link ControllerAdvice}.
  *
@@ -41,7 +37,7 @@ public class AdviceController {
     @ExceptionHandler(value = AuthenticationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public List<ErrorResponse> handleAuthException(AuthenticationException ex) {
+    public ErrorResponse handleAuthException(AuthenticationException ex) {
         ErrorResponse errorResponse = null;
         if (ex instanceof UsernameNotFoundException) {
             errorResponse = process(Error.USER_NOT_FOUND);
@@ -55,7 +51,7 @@ public class AdviceController {
         if (errorResponse == null) {
             errorResponse = process(Error.AUTHENTICATION_FAILURE);
         }
-        return Collections.singletonList(errorResponse);
+        return errorResponse;
     }
 
     /**
@@ -67,8 +63,8 @@ public class AdviceController {
     @ExceptionHandler(value = ErrorException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public List<ErrorResponse> handleException(ErrorException ex) {
-        return ex.getErrors().stream().map(this::process).collect(Collectors.toList());
+    public ErrorResponse handleException(ErrorException ex) {
+        return process(ex.getError());
     }
 
     /**
@@ -80,9 +76,9 @@ public class AdviceController {
     @ExceptionHandler(value = Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
-    public List<ErrorResponse> handleException(Exception ex) {
+    public ErrorResponse handleException(Exception ex) {
         log.error(ex.getMessage(), ex);
-        return Collections.singletonList(process(Error.INTERNAL_ERROR, ex));
+        return process(Error.INTERNAL_ERROR, ex);
     }
 
     /**

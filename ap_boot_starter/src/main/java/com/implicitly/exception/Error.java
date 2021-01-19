@@ -6,7 +6,6 @@ package com.implicitly.exception;
 
 import io.vavr.collection.Array;
 import io.vavr.collection.Seq;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -15,7 +14,6 @@ import lombok.Getter;
  * @author Emil Murzakaev.
  */
 @Getter
-@AllArgsConstructor
 public enum Error {
 
     USER_NOT_FOUND("U0001", "Пользователь не найден"),
@@ -32,11 +30,11 @@ public enum Error {
     /**
      * Код ошибки.
      */
-    private String code;
+    private final String code;
     /**
      * Сообщение ошибки.
      */
-    private String message;
+    private final String message;
     /**
      * Дополнительные данные.
      */

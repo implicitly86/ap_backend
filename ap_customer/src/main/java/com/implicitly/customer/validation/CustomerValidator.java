@@ -32,17 +32,7 @@ public class CustomerValidator {
                 validateFirstName(customer.getFirstName()),
                 validateLastName(customer.getLastName()),
                 validatePhone(customer.getPhone())
-        ).ap((name, firstName, lastName, phone) -> CustomerDTO.builder()
-                .id(customer.getId())
-                .name(name)
-                .firstName(firstName)
-                .lastName(lastName)
-                .address(customer.getAddress())
-                .phone(phone)
-                .email(customer.getEmail())
-                .type(customer.getType())
-                .build()
-        );
+        ).ap((name, firstName, lastName, phone) -> customer);
     }
 
     /**
